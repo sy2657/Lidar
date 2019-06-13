@@ -1,0 +1,35 @@
+# Actual code testing 
+
+# STEP 3 
+
+trajcount1={}
+
+xmin = -76
+xmax = 95
+ymin=-87
+ymax =115
+
+# change range to -10, 10
+
+# 27472, 30300 33532 33734
+for i in range(34542):
+    p = lookupdict[i]
+    px = p[0]
+    py = p[1]
+    if i==24000:
+        print(24000)
+    # calculate x between i.x - 5, i.x+5
+    for j in range(-10, 11):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        # calculate y between i.y-5, i.y+5 
+        for k in range(-10, 11):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            # inv dict lookup
+            p2 = invlookupdict[(jx, jy)]
+            # save trajcount1[(i, p2)]
+            trajcount1[(i, p2)]=0
