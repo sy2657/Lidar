@@ -1,0 +1,18 @@
+# based on 2019-02-27-12-19-36_Velodyne-HDL-32-Data-BF1-CL1-Traj
+
+# STEP 1
+cmap1={}
+ind=0
+
+# x min is -76
+# before -60 -46
+
+# xmax to 108 
+
+for ix in range(-76, 95):
+    for iy in range(-87, 115):
+        myvec=[]
+        myvec.append(ix)
+        myvec.append(iy)
+        cmap1[ind]=myvec
+        ind=ind+1
