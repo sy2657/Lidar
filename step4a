@@ -1,0 +1,67 @@
+#STEP 4 A 
+
+# input 
+tfile ="april2019/2019-02-27-12-19-36_Velodyne-HDL-32-Data-BF1-CL1-Traj.csv"
+
+# for length 1 side 
+# actual code
+import math
+import csv
+
+trajnum = 0 
+obnum = 1
+
+irow =0
+
+outlier =0
+
+# test: is prevfram, frameindex, prevtrajnum necessary ? 
+
+with open(tfile) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        irow=irow+1
+        trajnum = row[0]
+        frameindex = row[17]
+        #print("frame:",frameindex)
+        if line_count==0:
+            line_count=line_count+1
+            continue
+        if line_count==1:
+            line_count=line_count+1
+            prevrow = row
+            prevx = float(prevrow[6])
+            prevy = float(prevrow[7])
+            pfx = math.floor(prevx)
+            pfy = math.floor(prevy)
+            continue
+        currx =float(row[6])
+        curry =float(row[7])
+        fx = math.floor(currx)
+        fy = math.floor(curry)
+        if pfx==fx and pfy==fy:
+            prevframe=frameindex
+            continue
+        if obnum != trajnum:
+            pfx = fx
+            pfy= fy
+            obnum = trajnum
+            prevtrajnum = trajnum
+            prevframe=frameindex
+            continue
+        # now save to the map(i,j)
+        
+        fromi = invlookupdict[(pfx,pfy)]
+        #topt = []
+        toi = invlookupdict[(fx,fy)]
+        #print("row",irow)
+        mcount = trajcount1[(fromi,toi)]
+        trajcount1[(fromi, toi)] = mcount+1
+        # set previous
+        pfx = fx
+        pfy = fy
+        prevframe = frameindex
+        prevtrajnum= trajnum
+        
+        
