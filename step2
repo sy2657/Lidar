@@ -1,0 +1,10 @@
+# STEP 2
+lookupdict={}
+invlookupdict={}
+
+# 27472 , 30300 , 33532
+for i in range(34542):
+    lookupdict[i] = cmap1[i]
+    p1 = cmap1[i][0]
+    p2 = cmap1[i][1]
+    invlookupdict[(p1,p2)]=i
