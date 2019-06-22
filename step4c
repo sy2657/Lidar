@@ -34,6 +34,7 @@ with open(tfile) as csv_file:
         irow=irow+1
         trajnum = row[0]
         frameindex = row[17]
+          
         # check first row
         if line_count==0:
             line_count=line_count+1
@@ -64,22 +65,41 @@ with open(tfile) as csv_file:
             pfx = fx
             pfy= fy
             obnum = trajnum
-            prevtrajnum = trajnum
             prevframe=frameindex
             prevtimestamp = timestamp
             continue
         #print("frame:",frameindex)
         
+        # check if there is difference
+        if pfx==fx and pfy==fy:
+            prevtimestamp = timestamp
+            continue
+        # check for zero valued timestamp
+        if timestamp==0:
+            prevtimestamp=0
+            # set previous x, y
+            pfx = fx
+            pfy = fy
+            continue
+        # check for zero valued previous timestamp 
+        if prevtimestamp==0:
+            prevtimestamp=timestamp
+            pfx = fx
+            pfy= fy
+            continue
         # test the diff in set 
         if len(settimestamp) != 0:
+            #print some info 
+            #print("settimestamp at", irow)
             setlen = len(settimestamp)
-            for i in range(0, setlen):
+            for i in range(0, setlen-1):
                 sts1 = settimestamp[i]
                 pfx1 = setx[i]
                 pfy1 = sety[i]
+                #test current time stamp
                 ts1 = sts1*0.000001
-                pts1 = prevtimestamp*0.000001
-                diff1 = ts1 - pts1
+                #pts1 = prevtimestamp*0.000001
+                diff1 = ts - ts1
             # if current distance greater than 0.15, discard
                 if diff1 > 0.15:
                     #settimestamp.remove(sts1)
@@ -97,6 +117,8 @@ with open(tfile) as csv_file:
                 toi1 = invlookupdict[(fx, fy)]
                 mcount1 = trajcount1[(fromi1,toi1)]
                 trajcount1[(fromi1, toi1)] = mcount1+1
+                print("from coord at", pfx1, pfy1)
+                print("to coord at", fx, fy)
                 # add to the trajectory 
         # higher than 0.15
         if diff > 0.15:
@@ -107,43 +129,42 @@ with open(tfile) as csv_file:
             # clear the sets?
             continue
         # lower than 0.05
-        if diff < 0.05: 
+        if diff < 0.05:   
+            print("settimestamp at", irow)
+            print("current time stamp", timestamp)
+            print("previous time stamp", prevtimestamp)
             # add to sets 
             #prevtimestamp stays the same 
             # pfx and pfy stay the same 
-            settimestamp.add(prevtimestamp)
+            settimestamp.append(prevtimestamp)
             prevtimestamp =timestamp
-            setx.add(pfx)
+            setx.append(pfx)
             pfx =fx
-            sety.add(pfy)
+            sety.append(pfy)
             pfy = fy
             continue  # continue 
         # if falls within 0.05 to 0.15 
-        print('current timestamp:',ts)
-        if pfx==fx and pfy==fy:
-            prevframe=frameindex
-            prevtimestamp = timestamp
-            continue
+        #print('current timestamp:',ts)
+        
         
         # now save to the map(i,j)
         
         fromi = invlookupdict[(pfx,pfy)]
         #topt = []
         toi = invlookupdict[(fx,fy)]
-        #print("row",irow)
         mcount = trajcount1[(fromi,toi)]
         trajcount1[(fromi, toi)] = mcount+1
         # set previous
         pfx = fx
         pfy = fy
-        prevframe = frameindex
-        prevtrajnum= trajnum
+        #prevframe = frameindex
+        #prevtrajnum= trajnum
         prevtimestamp = timestamp 
         
         # condition break for testing
-        if irow == 23:
+        if irow > 10000:
             # print 
             print("fx", fx)
             print("fy", fy)
-            break
+            break  
             
