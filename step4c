@@ -67,6 +67,10 @@ with open(tfile) as csv_file:
             obnum = trajnum
             prevframe=frameindex
             prevtimestamp = timestamp
+            # if in diff traj, delete settimestamp /clear 
+            settimestamp=[]
+            setx= []
+            sety=[]
             continue
         #print("frame:",frameindex)
         
@@ -115,6 +119,7 @@ with open(tfile) as csv_file:
                 pfy1 = sety[i]
                 fromi1 = invlookupdict[(pfx1,pfy1)]
                 toi1 = invlookupdict[(fx, fy)]
+                
                 mcount1 = trajcount1[(fromi1,toi1)]
                 trajcount1[(fromi1, toi1)] = mcount1+1
                 print("from coord at", pfx1, pfy1)
