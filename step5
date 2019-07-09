@@ -1,0 +1,139 @@
+# STEP 5 
+
+# array to be plotted
+arrayx = []
+
+arrayy = []
+
+tarray = []
+
+# set if search nearby points
+search2 = 1
+
+# parameters of step 5
+n = 100
+
+firstrow=0
+
+obnum =1
+
+previndices=[]
+
+currentindices=[]
+
+currentmap = {}
+
+arrayofarrays = []
+currentdict = {}
+
+arrayofdicts=[]
+
+finalarray=[]
+
+for i in range(0, n):
+    name = "Cluster_Frame"
+    name = name+str(i)
+    name = name+".csv"
+    #print(name)
+    pathname = path+"/"+name
+    
+    with open(pathname) as csv_file:
+        previndices = currentindices
+        currentindices =[] # set to empty
+        # set map
+        prevmap = currentmap
+        currentmap= {}
+        
+        # for comparing the freq. of matched
+        matchfreq = {} # map cluster number to the freq. value 
+        
+        # must initialize matchfreq
+        
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        for row in csv_reader:
+            if firstrow==0:
+                firstrow=1
+                continue
+            vehped = row[1]
+            if vehped == 2: 
+                continue # only track vehicles
+            clusterid = row[0] # current cluster id 
+            
+            if clusterid != obnum:
+                # append to dictionary
+                currentdict[obnum] = currentindices 
+                
+                # new comparisons 
+                obnum = clusterid
+                
+                currentindices=[]
+                
+                continue
+            #clustertype = row[1]
+            xpoint = float(row[2])
+            ypoint = float(row[3])
+            print(xpoint)
+            xfloor = math.floor(xpoint)
+            yfloor = math.floor(ypoint)
+            fromi = invlookupdict[(xfloor,yfloor)]
+            # function to find highest freq 
+            h1, i1 = highestfreq(fromi)
+            # save to indices
+            currentindices.append(i1) 
+            # save to map
+            currentmap[i1] = 1
+            # now check the previndices
+            #see if they match 
+            # use map key and value pair 
+            # find fromi in previndices
+            val = prevmap.get(i1)
+            if val ==None:
+                # method 2: search nearby points 
+                if search2 ==1:
+                    ipt = lookupdict[i1]
+                    iptx= ipt[0]
+                    ipty = ipt[1]
+                    for ix in range(-5, 5):
+                        for iy in range(-5, 5):
+                            nearpt = (iptx+ ix, ipty + iy)
+                            # check if is in prevmap
+                            inear = invlookupdict[nearpt]
+                            valnear = prevmap.get(inear)
+                            if valnear != None:
+                                # add to matchfreq 
+                                valm = matchfreq[obnum]
+                                if valm==None:
+                                    matchfreq[obnum]=0.1 # lesser value added 
+                                else:
+                                    matchfreq[obnum]= matchfreq[obnum]+0.1
+            else:
+                # add to freq
+                # check if matchfreq[obnum] exists
+                val1 = matchfreq[obnum]
+                if val1==None:
+                    matchfreq[obnum]=1
+                else:
+                    matchfreq[obnum]= matchfreq[obnum]+1
+            
+            
+        # after reading all the rows, determine highest freq
+        # iterate dictionary 
+        f = 0
+        ky = 0 # index of the cluster with highest freq
+        for k in matchfreq:
+            f1 = matchfreq[k]
+            if f1 > f:
+                f= f1
+                # save the index 
+                ky = k 
+        # add index to final index set 
+        finalarray.append(ky)
+        # append the points to the set of pts to be plotted
+        apt = lookupdict[ky]
+        ax = apt[0]
+        ay = apt[1]
+        arrayx.append(ax)
+        arrayy.append(ay)
+        
+                
+
