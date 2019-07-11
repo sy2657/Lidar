@@ -15,20 +15,28 @@ n = 100
 
 firstrow=0
 
-obnum =1
+obnum =0
 
 previndices=[]
 
 currentindices=[]
 
-currentmap = {}
+totalmap = {}
 
 arrayofarrays = []
+
+# rename current dict to totaldict?
 currentdict = {}
 
 arrayofdicts=[]
 
 finalarray=[]
+
+xvalues = []
+yvalues = []
+
+hxvalues =[]
+hyvalues= []
 
 for i in range(0, n):
     name = "Cluster_Frame"
@@ -63,15 +71,20 @@ for i in range(0, n):
                 # append to dictionary
                 currentdict[obnum] = currentindices 
                 
+                # append to dictionary of maps
+                totalmap[obnum] = currentmap
+                
                 # new comparisons 
                 obnum = clusterid
                 
                 currentindices=[]
+                currentmap= {}
                 
                 continue
             #clustertype = row[1]
             xpoint = float(row[2])
             ypoint = float(row[3])
+            # add to 
             print(xpoint)
             xfloor = math.floor(xpoint)
             yfloor = math.floor(ypoint)
@@ -129,11 +142,15 @@ for i in range(0, n):
         # add index to final index set 
         finalarray.append(ky)
         # append the points to the set of pts to be plotted
+        
         apt = lookupdict[ky]
         ax = apt[0]
         ay = apt[1]
         arrayx.append(ax)
         arrayy.append(ay)
+        
+        # set prevmap to the one 
+        prevmap = totalmap[ky]
         
                 
 
