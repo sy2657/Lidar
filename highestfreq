@@ -1,0 +1,32 @@
+# subfunction
+
+xmin = -76
+xmax = 95
+ymin=-87
+ymax =115
+
+
+            
+def highestfreq(fromi):
+    highest = 0
+    indexhighest = fromi
+    (px, py) = lookupdict[fromi]
+    for j in range(-10, 11):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        for k in range(-10, 11):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            toi = invlookupdict[(jx, jy)]
+            t = trajcount1[(fromi, toi)]
+            #if t>0:
+                #print(t)
+            if t > highest:
+                highest=t
+                indexhighest=toi
+    return highest, indexhighest
+            
+    
