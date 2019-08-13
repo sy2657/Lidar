@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pylab as plt
+
+# plots frequency of surrounding grid of given point p
+
+# around local pt 
+def plot1(p):
+    xa= []
+    ya=[]
+    ta=[]
+    px =p[0]
+    py =p[1]
+    for j in range(-10, 11):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        for k in range(-10, 11):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            toi = invlookupdict[(jx, jy)]
+            t = trajcount1[(fromi, toi)]
+        # append to array
+            xa.append(jx)
+            ya.append(jy)
+            ta.append(t)
+    # end of double for loop 
+    plt.scatter(xa, ya, c=ta, cmap='cool')
+    plt.colorbar()
+    plt.show()
+    
