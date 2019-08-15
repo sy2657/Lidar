@@ -10,6 +10,7 @@ def plot1(p):
     ta=[]
     px =p[0]
     py =p[1]
+    fromi = invlookupdict[p]
     for j in range(-10, 11):
         jx = px+j
         if jx>xmax-1 or jx<xmin: # check if pts in range
