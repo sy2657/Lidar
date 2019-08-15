@@ -1,0 +1,81 @@
+
+# interactive -> 
+
+# set the dictionary 
+def setdictionary(px, py):
+    xa= []
+    ya=[]
+    ta=[]
+    fromi = invlookupdict[(px, py)]
+    for j in range(-10, 11):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        for k in range(-10, 11):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            toi = invlookupdict[(jx, jy)]
+            t = trajcount1[(fromi, toi)]
+            if t==0:
+                continue
+        # append to array
+            xa.append(jx)
+            ya.append(jy)
+            ta.append(t)
+    return xa, ya, ta
+
+
+
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
+from matplotlib.text import Annotation
+
+%matplotlib notebook
+
+
+import matplotlib
+import matplotlib.pylab as plt
+import numpy as np
+import math
+
+ps = []
+
+fig = plt.figure(figsize=(10, 10))
+
+matplotlib.pyplot.grid(b=True)
+
+ax = fig.add_subplot(111)
+ax.set_xlim(0, 50)
+ax.set_ylim(0, 50)
+
+ax_clear = plt.axes([0.0, 0.0, 0.1, 0.05])
+button = Button(ax_clear, 'Clear all')
+
+def onclick(event):
+    ps.append([event.xdata,event.ydata])
+    ax.set_xlim(0, 50)
+    ax.set_ylim(0, 50)
+    # try to change it progressively
+    xpt = math.floor(ps[-1][0])
+    ypt = math.floor(ps[-1][1])
+    xa, ya, ta = setdictionary(xpt, ypt) 
+    ax.scatter(xa, ya, c=ta, cmap='viridis')
+    
+    
+# create a button
+
+fig.canvas.mpl_connect('button_press_event', onclick)
+
+
+def clickbutton(event):
+    
+    # step 1: we clear all artist object of the scatter plot
+    ax.cla()
+    
+button.on_clicked(clickbutton)
+
+#fig.tight_layout()
+
+fig.show()
