@@ -64,8 +64,10 @@ for j in range(0, mx):
     mf[j]=0 
 
 matchfreq= mf
+
+initialframe =2
     
-for i in range(2, n):
+for i in range(initialframe, n):
     print("i is ",i)
     name = "Cluster_Frame"
     name = name+str(i)
@@ -96,7 +98,7 @@ for i in range(2, n):
         
         csv_reader = csv.reader(csv_file, delimiter=",")
         
-        if i==1:
+        if i==initialframe:
             #print("i",i)
             for row in csv_reader:
                 # skip label or first row
