@@ -1,0 +1,219 @@
+# error calculation, alg 2
+
+
+import numpy as np
+# clockwise calculation
+def clockwise(a, b, c):
+	m = np.array([[1, a[0], a[1]],[1,b[0],b[1]], [1, c[0], c[1]]])
+	mdet = np.linalg.det(m)
+	if mdet < 0:
+		return True
+	else:
+		return False
+
+# recompute vertices to be clockwise
+def recomputeclockwise(points):
+	
+	numpts = len(points)
+	firstpt = points[0]
+	for i in range(0, numpts-3): 
+		# 3 pts at a time 
+		
+		# if last pt, then change the third coord to first pt
+		if i == numpts-3:
+			p3 = firstpt
+		else:
+			p3 = points[i+2]
+		p1 = points[i]
+		p2 = points[i+1]
+		boolclockwise = clockwise(p1, p2, p3)
+		if not boolclockwise:
+			# try to rearrange the pts here 
+			# by distance to closest pt ?
+
+# input: stream of pts P and two pts q1 and q2
+# output: error_P (q1, q2) 
+def errorP(P, q1, q2):
+	err = 0
+	H = C(q1, q2)
+	for p in P:
+		if clockwise(q1, p, q2):
+			err = max(err, dist(p, H))
+	return err
+
+def normalize(v):
+	v1 = v[0]
+	v2 = v[1]
+	s = math.pow(v1, 2) + math.pow(v2,2)
+	s1 = math.sqrt(s)
+	final = []
+	final.append(v1/float(s1))
+	final.append(v2/float(s1))
+	return final 
+		
+
+# direction
+def direction(t1, t2):
+	#return dot(t1, t2)
+	unit1 = normalize(t1)
+	unit2 = normalize(t2)
+	sum = unit1 + unit2
+	return normalize(sum)
+	
+
+# approx convex hull of data streams
+
+# input: stream of pts P, value eps in (0,1] 
+# output: eps-approx. hull of P 
+
+def approxhull(P, eps):
+	t1 = (1,0)
+	t2 = (-1, 0)
+	T = []
+	T.append(t1)
+	T.append(t2)
+	# for i in 1, 2 let qi = getmax(ti)
+	# array q for q_i
+	qarray = []	
+	qmap = {} # associating qi with ti 
+	
+	qmap[t1] = 1 # max of (1,0)
+	qmap[t2] = 0 # max of (-1,0)
+	
+	qarray.append(1)
+	qarray.append(0)
+	
+	flag = -1 # down pos is -1 and up pos is 1 
+	
+	Error = {} 
+	# or use an array 
+	ErrorArray1 = [] # for i, i+1
+	ErrorArray2 = [] # for i-1, i+1
+	
+	tarray = [] # store directions btwn t_i and t_{i+1}
+	
+	
+	
+	tsize = len(T) -1 
+	for i in range(1, tsize):
+		ti = T[i]
+		tip1 = T[i+1]
+		
+		q1 = qmap[ti]
+		q2 = qmap[tip1]
+		#compute error P(q_i, q_{i+1}) 
+		e1 = errorP(P, q1, q2)
+		ErrorArray1.append(e1)
+		# if there is no i-1 , skip 
+		if i==1:
+			print()
+		else:			
+		# compute error P(q_{i-1}, q_{i+1})
+			tim1 = T[i-1]
+			q3 = qmap[tim1]
+			e2 = errorP(P, q3, q2)
+			ErrorArray2.append(e2)
+			
+		
+		# dir bisecting t_i and t_{i+1}
+		# ti = T[i]
+		# ti1 = T[i+1]
+		tiprime = direction(ti, tip1)
+		tarray.append(tiprime)
+		# compute max of tiprime
+		qp = np.max(tiprime)
+		qarray.append(qp)
+		
+	for i in range(1, tsize):
+		ti = T[i]
+		tip1 = T[i+1]	
+		tiprime = tarray[i]	
+		qiprime = qarray[i]
+		#err = errorP(q1, q2)
+		err = ErrorArray2[i]
+		if err <= eps:
+			if tip1 in T and tim1 in T:
+				# remove ti from T
+				T.remove(ti)
+		#err1 = errorP(qi, qip1)
+		err1 = ErrorArray1[i]
+		if err1	> eps:
+			# add to T 
+			T.append(tiprime)
+			# associate qi' with ti' 
+			qmap[tiprime] = qiprime
+			flag = 1 # raise flag 
+	# recompute indices of T for clockwise order
+	
+	# delete pts/vectors but ti in T and qi
+	
+	# if flag is up
+	# use while loop to keep going to line 4 (copy of above procedure in while loop)
+	while flag==1:
+		# go to line 4
+		flag = -1 # down pos is -1 and up pos is 1 
+		
+		tsize = len(T) -1 
+		for i in range(1, tsize):
+			ti = T[i]
+			tip1 = T[i+1]
+		
+			q1 = qmap[ti]
+			q2 = qmap[tip1]
+		#compute error P(q_i, q_{i+1}) 
+			e1 = errorP(P, q1, q2)
+			ErrorArray1.append(e1)
+		# if there is no i-1 , skip 
+			if i==1:
+				print()
+			else:			
+		# compute error P(q_{i-1}, q_{i+1})
+				tim1 = T[i-1]
+				q3 = qmap[tim1]
+				e2 = errorP(P, q3, q2)
+				ErrorArray2.append(e2)
+			
+		
+		# dir bisecting t_i and t_{i+1}
+		# ti = T[i]
+		# ti1 = T[i+1]
+			tiprime = direction(ti, tip1)
+			tarray.append(tiprime)
+		# compute max of tiprime
+			qp = np.max(tiprime)
+			qarray.append(qp)
+			
+		for i in range(1, tsize):
+			ti = T[i]
+			tip1 = T[i+1]	
+			tiprime = tarray[i]	
+			qiprime = qarray[i]
+		#err = errorP(q1, q2)
+			err = ErrorArray2[i]
+			if err <= eps:
+				if tip1 in T and tim1 in T:
+				# remove ti from T
+					T.remove(ti)
+		#err1 = errorP(qi, qip1)
+			err1 = ErrorArray1[i]
+			if err1	> eps:
+			# add to T 
+				T.append(tiprime)
+			# associate qi' with ti' 
+				qmap[tiprime] = qiprime
+				flag = 1 # raise flag 
+			
+		# recompute indices of T for clockwise order
+		
+		# delete pts/vectors but ti in T and qi
+		# check if it is in T 
+		for q in qarray:
+			tq = qmap[q]
+			if tq not in T:
+				# delete
+				q.remove(q)
+				
+		# end of while loop 
+		
+		# output the q
+		return qarray 
