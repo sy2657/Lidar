@@ -1,0 +1,25 @@
+# find dir.
+def finddir(fr, to):
+    f = lookupdict[fr]
+    t = lookupdict[to]
+    dx = t[0] - f[0]
+    dy = t[1] - f[1]
+    global up, down, upleft,upright,downleft, downright, left, right, same
+    if dx==0:
+        if dy>0:
+            up=up+1
+        if dy<0:
+            down=down+1
+        if dy==0:
+            same = same+1
+    if dx>0:
+        if dy>0:
+            upright=upright+1
+        if dy<0:
+            downright=downright+1
+    if dx<0:
+        if dy>0:
+            upleft = upleft+1
+        if dy<0:
+            downleft= downleft+1
+            
