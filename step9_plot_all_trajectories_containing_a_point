@@ -1,0 +1,85 @@
+# STEP 9
+# plot all the trajectories containing a certain point 
+
+xa=[]
+ya=[]
+
+coord = (20, 25)  
+
+icoord = invlookupdict[coord]
+
+tfile ="april2019/2019-02-27-12-19-36_Velodyne-HDL-32-Data-BF1-CL1-Traj.csv"
+
+import math
+import csv
+
+trajnum = 0 
+obnum = 1
+
+irow =0
+
+outlier =0
+
+xvalues=[]
+yvalues =[]
+
+# boolean to include trajectory in plot
+b = False
+
+with open(tfile) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        irow=irow+1
+        trajnum = row[0]
+        
+        if line_count==0:
+            line_count=line_count+1
+            continue
+        if line_count==1:
+            line_count=line_count+1
+            prevrow = row
+            prevx = float(prevrow[6])
+            prevy = float(prevrow[7])
+            pfx = math.floor(prevx)
+            pfy = math.floor(prevy)
+            continue
+        currx =float(row[6])
+        curry =float(row[7])
+        fx = math.floor(currx)
+        fy = math.floor(curry)
+        
+        xvalues.append(currx) 
+        yvalues.append(curry) 
+        
+        if pfx==fx and pfy==fy:
+            prevframe=frameindex
+            continue
+        if obnum != trajnum:
+            pfx = fx
+            pfy= fy
+            obnum = trajnum
+            prevtrajnum = trajnum
+            prevframe=frameindex
+            # Step 9 added code
+            if b ==True:
+                # add to plot
+                xa.extend(xvalues)
+                ya.extend(yvalues)
+                # reset b 
+                b= False
+            # reset xvalues + yvalues
+            xvalues= []
+            yvalues=[]
+            continue
+        fromi = invlookupdict[(pfx,pfy)]
+        #topt = []
+        toi = invlookupdict[(fx,fy)]
+        # Step 9 added code
+        if fromi== icoord or toi == icoord:
+            b= True
+    print("hi")
+
+plt.scatter(xa, ya)
+#plt.colorbar()
+plt.show()
