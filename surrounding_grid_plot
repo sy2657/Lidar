@@ -1,0 +1,37 @@
+# surrounding grid plot
+
+# testing the output of trajcount1 
+
+#coord = (3,5)
+
+coord = (-18, 37)
+
+fromi = invlookupdict[coord]
+
+px = coord[0]
+py = coord[1]
+
+xa= []
+ya=[]
+ta=[]
+
+for j in range(-10, 11):
+    jx = px+j
+    if jx>xmax-1 or jx<xmin: # check if pts in range
+        continue
+    for k in range(-10, 11):
+        jy = py+k
+            # check if pts are in range
+        if jy>ymax-1 or jy<ymin:
+            continue
+        toi = invlookupdict[(jx, jy)]
+        t = trajcount1[(fromi, toi)]
+        # append to array
+        xa.append(jx)
+        ya.append(jy)
+        ta.append(t)
+    
+plt.scatter(xa, ya, c=ta, cmap='cool')
+plt.colorbar()
+plt.show()
+    
