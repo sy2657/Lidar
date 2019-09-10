@@ -1,0 +1,99 @@
+# STEP 9 B
+# make separate plots for the trajectories, with t as time (to see how it progresses)
+
+xa=[]
+ya=[]
+ta = []
+
+coord = (-5, 54)  
+px = coord[0]
+py=coord[1]
+
+icoord = invlookupdict[coord]
+
+tfile ="april2019/2019-02-27-12-19-36_Velodyne-HDL-32-Data-BF1-CL1-Traj.csv"
+
+import math
+import csv
+
+trajnum = 0 
+obnum = 1
+
+irow =0
+
+outlier =0
+
+xvalues=[]
+yvalues =[]
+
+# boolean to include trajectory in plot
+b = False
+
+tindex = 0
+plotno = 1 
+
+with open(tfile) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        irow=irow+1
+        tindex = tindex+1 
+        ta.append(tindex)
+        trajnum = row[0]
+        
+        if line_count==0:
+            line_count=line_count+1
+            continue
+        if line_count==1:
+            line_count=line_count+1
+            prevrow = row
+            prevx = float(prevrow[6])
+            prevy = float(prevrow[7])
+            pfx = math.floor(prevx)
+            pfy = math.floor(prevy)
+            continue
+        currx =float(row[6])
+        curry =float(row[7])
+        fx = math.floor(currx)
+        fy = math.floor(curry)
+        
+        xvalues.append(currx) 
+        yvalues.append(curry) 
+        
+        if pfx==fx and pfy==fy:
+            prevframe=frameindex
+            continue
+        if obnum != trajnum:
+            tindex =0
+            pfx = fx
+            pfy= fy
+            obnum = trajnum
+            prevtrajnum = trajnum
+            prevframe=frameindex
+            # Step 9 added code
+            if b ==True:
+                # add to plot
+                xa.extend(xvalues)
+                ya.extend(yvalues)
+                # try diff colors
+                #plt.scatter(xvalues, yvalues)
+                plt.figure(plotno)
+                # either keep plotno = plotno or plotno = plotno+1
+                plotno=plotno+1
+                plt.scatter(xvalues, yvalues, c=ta)
+                plt.plot(px, py, 'ro') 
+                # reset b 
+                b= False
+            # reset xvalues + yvalues
+            xvalues= []
+            yvalues=[]
+            ta = []
+            continue
+        fromi = invlookupdict[(pfx,pfy)]
+        #topt = []
+        toi = invlookupdict[(fx,fy)]
+        # Step 9 added code
+        if fromi== icoord or toi == icoord:
+            b= True
+
+
