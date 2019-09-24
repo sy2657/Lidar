@@ -20,7 +20,7 @@ tarray = []
 search2 = 0
 
 # parameters of step 5
-n = 9
+n = 50
 
 firstrow=0
 
@@ -65,14 +65,15 @@ for j in range(0, mx):
 
 matchfreq= mf
 
-initialframe =2
+initialframe = 2
+
     
 for i in range(initialframe, n):
-    print("i is ",i)
+    #print("i is ",i)
     name = "Cluster_Frame"
     name = name+str(i)
     name = name+".csv"
-    print(name)
+    #print(name)
     pathname = path+"/"+name
     
     firstrow=0
@@ -115,8 +116,9 @@ for i in range(initialframe, n):
                     arrayy.append(ypoint)
                     #print("xpoint", xpoint)
                     #print("ypoint", ypoint)
-                    xfloor = math.floor(xpoint)
-                    yfloor = math.floor(ypoint)
+                    # change floor to round
+                    xfloor = round(xpoint)
+                    yfloor = round(ypoint)
                     fromi = invlookupdict[(xfloor,yfloor)]
                     h1, i1 = highestfreq(fromi)
                     prevmap[i1] = 1 # save
@@ -127,7 +129,7 @@ for i in range(initialframe, n):
             #plt.plot(arrayx, arrayy)
             plt.scatter(arrayx, arrayy)
         
-            continue
+            continue # don't need this continue statement?
             #break
                     
             
@@ -147,9 +149,9 @@ for i in range(initialframe, n):
             
             clusterid = float(row[0]) # current cluster id 
             
-            if clusterid==11:
-                print("11 cluster row", row1)
-                print("11 cluster row vp", vehped)
+            #if clusterid==11:
+                #print("11 cluster row", row1)
+                #print("11 cluster row vp", vehped)
                 
             
             if clusterid != obnum:
@@ -167,7 +169,7 @@ for i in range(initialframe, n):
                     print("11 row", row1)
                     print("11 row vehped",vehped)
                 
-                print("obnum is", obnum)
+                #print("obnum is", obnum)
                 # append to highest 
                 # check if exists 
                 #print("mval", matchfreq[obnum])
@@ -201,8 +203,9 @@ for i in range(initialframe, n):
             ypoint = float(row[3])
             # add to 
             #print(xpoint)
-            xfloor = math.floor(xpoint)
-            yfloor = math.floor(ypoint)
+            # change floor to round
+            xfloor = round(xpoint)
+            yfloor = round(ypoint)
             xvalues.append(xpoint) # save to array 
             yvalues.append(ypoint)
             fromi = invlookupdict[(xfloor,yfloor)]
@@ -249,8 +252,8 @@ for i in range(initialframe, n):
             
                 
         # add index to final index set 
-        print("highest index,",ky)
-        print("value of freq,",matchfreq[ky])
+        #print("highest index,",ky)
+        #print("value of freq,",matchfreq[ky])
         finalarray.append(ky)
         # append the points to the set of pts to be plotted ; use extend function
         #arrayx.extend(hxvalues)
@@ -259,11 +262,15 @@ for i in range(initialframe, n):
         
         #plt.plot(hxvalues, hyvalues)
         plt.scatter(hxvalues, hyvalues)
+        # reset hxvalues and hyvalues (don't need )
+        hxvalues =[]
+        hyvalues =[]
         
         # set prevmap to the one 
         prevmap = totalmap[ky]
         
-plt.legend(['file1', 'file2', 'file3', 'file4', 'file5', 'file6', 'file7', 'file8'], loc='upper left')
+#plt.legend(['file1', 'file2', 'file3', 'file4', 'file5', 'file6', 'file7', 'file8'], loc='upper left')
+
 plt.show()
 
 
