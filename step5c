@@ -69,11 +69,10 @@ initialframe = 2
 
     
 for i in range(initialframe, n):
-    #print("i is ",i)
     name = "Cluster_Frame"
     name = name+str(i)
     name = name+".csv"
-    #print(name)
+
     pathname = path+"/"+name
     
     firstrow=0
@@ -100,30 +99,27 @@ for i in range(initialframe, n):
         csv_reader = csv.reader(csv_file, delimiter=",")
         
         if i==initialframe:
-            #print("i",i)
             for row in csv_reader:
+            
                 # skip label or first row
                 if firstrowfirstfile==0:
                     firstrowfirstfile=1
                     continue
                 clusterid = float(row[0])
                 vehped = float(row[1])
-                #print("clusterid", clusterid)
+                
                 if clusterid==initialcluster and vehped==1:
                     xpoint = float(row[2])
                     ypoint = float(row[3])
                     arrayx.append(xpoint)
                     arrayy.append(ypoint)
-                    #print("xpoint", xpoint)
-                    #print("ypoint", ypoint)
                     # change floor to round
                     xfloor = round(xpoint)
                     yfloor = round(ypoint)
                     fromi = invlookupdict[(xfloor,yfloor)]
                     h1, i1 = highestfreq(fromi)
                     prevmap[i1] = 1 # save
-                    #print('prevmap entry',i1)
-            #skip
+                    
             # add to plt
             
             #plt.plot(arrayx, arrayy)
@@ -147,12 +143,7 @@ for i in range(initialframe, n):
             if vehped == 2: 
                 continue # only track vehicles
             
-            clusterid = float(row[0]) # current cluster id 
-            
-            #if clusterid==11:
-                #print("11 cluster row", row1)
-                #print("11 cluster row vp", vehped)
-                
+            clusterid = float(row[0]) # current cluster id                 
             
             if clusterid != obnum:
                    
@@ -163,19 +154,7 @@ for i in range(initialframe, n):
                 #currentdict[obnum] = currentindices 
                 
                 # append to dictionary of maps
-                totalmap[numo1] = currentmap
-                
-                if obnum==11:
-                    print("11 row", row1)
-                    print("11 row vehped",vehped)
-                
-                #print("obnum is", obnum)
-                # append to highest 
-                # check if exists 
-                #print("mval", matchfreq[obnum])
-                #mval = matchfreq[obnum] #if mval != None:
-                
-                
+                totalmap[numo1] = currentmap                
                 
                 if matchfreq[numo1] > f:
                     f = matchfreq[numo1]
@@ -183,9 +162,6 @@ for i in range(initialframe, n):
                     ky = numo1
                     hxvalues = xvalues
                     hyvalues = yvalues 
-                    # make the prevmap the current map
-                    
-                        # append to total map 
                     
                 
                 # new comparisons 
@@ -198,11 +174,9 @@ for i in range(initialframe, n):
                 yvalues =[]
                 
                 continue
-            #clustertype = row[1]
+                
             xpoint = float(row[2])
             ypoint = float(row[3])
-            # add to 
-            #print(xpoint)
             # change floor to round
             xfloor = round(xpoint)
             yfloor = round(ypoint)
@@ -215,12 +189,8 @@ for i in range(initialframe, n):
             currentindices.append(i1) 
             # save to map
             currentmap[i1] = 1
-            # now check the previndices
-            #see if they match 
-            # use map key and value pair 
-            # find fromi in previndices
+            
             val = prevmap.get(i1)
-            #print("val is", val)
             if val ==None:
                 #print("val none")
                 # method 2: search nearby points 
@@ -242,12 +212,7 @@ for i in range(initialframe, n):
                                 else:
                                     matchfreq[obnum]= matchfreq[obnum]+0.1
             else:
-                # add to freq
-                # check if matchfreq[obnum] exists
-                #val1 = matchfreq[obnum]
-                #print("add to matchfreq")
                 numo = float(obnum)
-                #print("numo", numo)
                 matchfreq[numo]= matchfreq[numo]+1
             
                 
