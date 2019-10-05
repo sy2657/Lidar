@@ -160,7 +160,7 @@ for i in range(initialframe, n):
             # save to map
             currentmap[i1] = 1
             # check prev map
-            val = prevmap.get(i1)
+            val = prevmap.get(fromi) # fromi not i1
             if val ==None:
                 print("")
             else:
