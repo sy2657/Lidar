@@ -199,7 +199,7 @@ for i in range(1, n):
             #see if they match 
             # use map key and value pair 
             # find fromi in previndices
-            val = prevmap.get(i1)
+            val = prevmap.get(fromi) # fromi not i1
             #print("val is", val)
             if val ==None:
                 #print("val none")
