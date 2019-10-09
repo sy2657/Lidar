@@ -52,7 +52,7 @@ hyvalues= []
 prevmap={}
 
 # initial cluster to track 
-initialcluster = 2
+initialcluster = 3
 
 
 # must intialize matchfreq
@@ -65,8 +65,11 @@ for j in range(0, mx):
 
 matchfreq= mf
 
-initialframe = 2
+initialframe = 3
 
+ky = initialcluster
+
+# edit this function s.t. given null hxvalues, hyvalues, keep previous array 
     
 for i in range(initialframe, n):
     name = "Cluster_Frame"
@@ -88,6 +91,10 @@ for i in range(initialframe, n):
         
             
         f= 0 #  max matchfreq val
+        
+        # reset hxvalues
+        hxvalues=[]
+        hyvalues=[]
         
         #previndices = currentindices
         #currentindices =[] # set to empty
@@ -119,11 +126,17 @@ for i in range(initialframe, n):
                     fromi = invlookupdict[(xfloor,yfloor)]
                     h1, i1 = highestfreq(fromi)
                     prevmap[i1] = 1 # save
+                    # debug 
+                    
                     
             # add to plt
             
-            #plt.plot(arrayx, arrayy)
+            #
             plt.scatter(arrayx, arrayy)
+            
+            # debug 
+            #plt.show()
+            #break
         
             continue # don't need this continue statement?
             #break
@@ -158,7 +171,7 @@ for i in range(initialframe, n):
                 
                 if matchfreq[numo1] > f:
                     f = matchfreq[numo1]
-                    print("f is", f)
+                    #print("f is", f)
                     ky = numo1
                     hxvalues = xvalues
                     hyvalues = yvalues 
@@ -212,7 +225,7 @@ for i in range(initialframe, n):
                                 else:
                                     matchfreq[obnum]= matchfreq[obnum]+0.1
             else:
-                numo = float(obnum)
+                numo = float(clusterid)
                 matchfreq[numo]= matchfreq[numo]+1
             
                 
@@ -226,16 +239,35 @@ for i in range(initialframe, n):
         #tarray.append(matchfreq[ky])
         
         #plt.plot(hxvalues, hyvalues)
+        print("i is",i)
+        print("keynum is", ky)
+        print("f is", f)
         plt.scatter(hxvalues, hyvalues)
+        # debug, print hxvalues
+        print("hxvalues are", hxvalues)
+        print("hyvalues are", hyvalues)
+        
+        # check if empty array
+        if len(hxvalues) !=0:
+            # set prevmap to the one 
+            prevmap = totalmap[ky]
+        
+        #debug
+        if i==21:
+         #   plt.show()
+            break
+        
         # reset hxvalues and hyvalues (don't need )
-        hxvalues =[]
-        hyvalues =[]
+        #hxvalues =[]
+        #hyvalues =[]
         
         # set prevmap to the one 
-        prevmap = totalmap[ky]
+        #prevmap = totalmap[ky]
+        #break # remove this break 
         
 #plt.legend(['file1', 'file2', 'file3', 'file4', 'file5', 'file6', 'file7', 'file8'], loc='upper left')
 
 plt.show()
+
 
 
