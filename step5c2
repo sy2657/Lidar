@@ -16,7 +16,7 @@ tarray = []
 search2 = 0
 
 # parameters of step 5
-n = 50
+n = 100
 
 firstrow=0
 
@@ -48,7 +48,7 @@ hyvalues= []
 prevmap={}
 
 # initial cluster to track 
-initialcluster = 2
+initialcluster = 1
 
 
 # must intialize matchfreq
@@ -62,12 +62,16 @@ for j in range(0, mx):
 
 matchfreq= mf
 # choose start frame
-initialframe = 2
+initialframe = 5
 
-everyframe = 10 # every 10 frames
+everyframe = 5 # every 10 frames
 
 arrhxvalues=[]
 arrhyvalues=[]
+
+stepcounter=1
+
+
 
 for i in range(initialframe, n):
     #print("i is ",i)
@@ -85,6 +89,11 @@ for i in range(initialframe, n):
         matchfreq[j] =0
     with open(pathname) as csv_file:
         f= 0 #  max match freq compare
+        
+        # reset hxvalues , hyvalues
+        hxvalues = []
+        hyvalues=[]
+        
         currentmap= {}
         csv_reader = csv.reader(csv_file, delimiter=",")
         
@@ -160,9 +169,11 @@ for i in range(initialframe, n):
             # save to map
             currentmap[i1] = 1
             # check prev map
-            val = prevmap.get(fromi) # fromi not i1
+            val = prevmap.get(fromi)
             if val ==None:
-                print("")
+                # do nothing
+                if search2==1:
+                    print("hi")
             else:
                 numo = float(obnum)
                 matchfreq[numo]= matchfreq[numo]+1
@@ -186,7 +197,9 @@ for i in range(initialframe, n):
             stepcounter = 1
         
         # set prevmap
-        prevmap = totalmap[ky]
+        if len(hxvalues) !=0:
+            # set prevmap to the one 
+            prevmap = totalmap[ky]
 
 plt.show()
                 
