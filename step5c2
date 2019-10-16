@@ -48,7 +48,7 @@ hyvalues= []
 prevmap={}
 
 # initial cluster to track 
-initialcluster = 1
+initialcluster = 5
 
 
 # must intialize matchfreq
@@ -62,7 +62,9 @@ for j in range(0, mx):
 
 matchfreq= mf
 # choose start frame
-initialframe = 5
+initialframe = 105
+# choose end frame
+endframe=205
 
 everyframe = 5 # every 10 frames
 
@@ -73,7 +75,7 @@ stepcounter=1
 
 
 
-for i in range(initialframe, n):
+for i in range(initialframe, endframe):
     #print("i is ",i)
     name = "Cluster_Frame"
     name = name+str(i)
@@ -122,6 +124,8 @@ for i in range(initialframe, n):
                     prevmap[i1] = 1
                     
             plt.scatter(arrayx, arrayy)
+            # reset ky 
+            ky = initialcluster
             continue
         for row in csv_reader:
             row1 = row1+1
@@ -153,6 +157,9 @@ for i in range(initialframe, n):
                 
                 xvalues =[]
                 yvalues =[]
+                # append first values
+                xvalues.append(float(row[2]))
+                yvalues.append(float(row[3]))
                 
                 continue
             xpoint = float(row[2])
@@ -177,11 +184,19 @@ for i in range(initialframe, n):
             else:
                 numo = float(obnum)
                 matchfreq[numo]= matchfreq[numo]+1
+                
+        # must also check f values at end of file
+        numo2 = float(obnum)
+        if matchfreq[numo2] > f:
+            f = matchfreq[numo2]
+            print("f is", f)
+            ky = numo2
         
         finalarray.append(ky)
         #arrayx.extend(hxvalues)
         #arrayy.extend(hyvalues)
         #tarray.append(matchfreq[ky])
+        print("key is", ky)
         
         #plt.scatter(hxvalues, hyvalues)
         # only plot every 10 frames -> append to arrhxvalues
