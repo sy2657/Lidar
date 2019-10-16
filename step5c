@@ -133,6 +133,8 @@ for i in range(initialframe, n):
             
             #
             plt.scatter(arrayx, arrayy)
+            # reset ky 
+            ky = initialcluster
             
             # debug 
             #plt.show()
@@ -228,7 +230,7 @@ for i in range(initialframe, n):
                 numo = float(clusterid)
                 matchfreq[numo]= matchfreq[numo]+1
             
-                
+        
         # add index to final index set 
         #print("highest index,",ky)
         #print("value of freq,",matchfreq[ky])
