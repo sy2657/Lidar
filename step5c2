@@ -188,9 +188,9 @@ for i in range(initialframe, endframe):
         # must also check f values at end of file
         numo2 = float(obnum)
         if matchfreq[numo2] > f:
-            f = matchfreq[numo2]
-            print("f is", f)
             ky = numo2
+            hxvalues = xvalues
+            hyvalues = yvalues
         
         finalarray.append(ky)
         #arrayx.extend(hxvalues)
