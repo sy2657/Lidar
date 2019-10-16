@@ -191,6 +191,7 @@ for i in range(initialframe, endframe):
             ky = numo2
             hxvalues = xvalues
             hyvalues = yvalues
+            totalmap[ky]= currentmap
         
         finalarray.append(ky)
         #arrayx.extend(hxvalues)
