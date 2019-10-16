@@ -187,6 +187,9 @@ for i in range(initialframe, n):
                 
                 xvalues =[]
                 yvalues =[]
+                # append first values
+                xvalues.append(float(row[2]))
+                yvalues.append(float(row[3]))
                 
                 continue
                 
@@ -230,7 +233,12 @@ for i in range(initialframe, n):
                 numo = float(clusterid)
                 matchfreq[numo]= matchfreq[numo]+1
             
-        
+        numo2 = float(clusterid)
+        if matchfreq[numo2] > f:
+            f = matchfreq[numo2]
+            ky =numo2
+            totalmap[ky]= currentmap
+            
         # add index to final index set 
         #print("highest index,",ky)
         #print("value of freq,",matchfreq[ky])
