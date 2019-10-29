@@ -52,6 +52,13 @@ with open(tfile) as csv_file:
         fromi = invlookupdict[(pfx,pfy)]
         #topt = []
         toi = invlookupdict[(fx,fy)]
+        # debug -> prints 95509
+        if fromi==14621 and toi==17052:
+            print(line_count)
+            continue
+        if fromi==14621 and toi==16849:
+            print(line_count)
+            continue
         #print("row",irow)
         mcount = trajcount1[(fromi,toi)]
         trajcount1[(fromi, toi)] = mcount+1
