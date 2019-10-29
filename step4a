@@ -10,11 +10,8 @@ import csv
 
 trajnum = 0 
 obnum = 1
-
 irow =0
-
 outlier =0
-
 # test: is prevfram, frameindex, prevtrajnum necessary ? 
 
 with open(tfile) as csv_file:
@@ -63,5 +60,6 @@ with open(tfile) as csv_file:
         pfy = fy
         prevframe = frameindex
         prevtrajnum= trajnum
+        line_count = line_count+1
         
         
