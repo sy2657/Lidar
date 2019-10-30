@@ -55,7 +55,7 @@ initialcluster = 5
 mf = defaultdict(list)
 
 # maximum object/cluster id in any frame
-mx = 11
+mx = 20
 
 for j in range(0, mx):
     mf[j]=0 
