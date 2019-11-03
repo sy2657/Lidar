@@ -22,7 +22,7 @@ tarray = []
 
 
 # parameters of step 5
-n = 67
+n = 75
 
 firstrow=0
 
@@ -222,8 +222,16 @@ for i in range(initialframe, n):
         hxvalues = totxvalues[ky]
         hyvalues = totyvalues[ky]
         
+        avx = np.mean(hxvalues)
+        avy = np.mean(hyvalues)
+        
         #plt.plot(hxvalues, hyvalues)
         plt.scatter(hxvalues, hyvalues)
+        
+        # print mean
+        print("mean x,",np.mean(hxvalues))
+        print("mean y,",np.mean(hyvalues))
+        
         # reset hxvalues and hyvalues (don't need )
         hxvalues =[]
         hyvalues =[]
