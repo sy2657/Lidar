@@ -1,0 +1,386 @@
+# december step 1
+
+dcmap1 = {}
+ind= 0
+
+for ix in range(-76, 109):
+    for iy in range(-87, 116):
+        myvec=[]
+        myvec.append(ix)
+        myvec.append(iy)
+        dcmap1[ind]=myvec
+        ind=ind+1
+
+# december step 2 
+dlookupdict={}
+dinvlookupdict={}
+
+for i in range(37555):
+    dlookupdict[i] = dcmap1[i]
+    p1 = dcmap1[i][0]
+    p2 = dcmap1[i][1]
+    dinvlookupdict[(p1,p2)]=i
+
+# december step 3
+
+dtrajcount={}
+
+xmin = -76
+xmax = 109
+ymin=-87
+ymax =116
+
+range1 = 10 
+
+for i in range(37555):
+    p = dlookupdict[i]
+    px = p[0]
+    py = p[1]
+    if i==24000:
+        print(24000)
+    # calculate x between i.x - 5, i.x+5
+    for j in range(-range1, range1+ 1):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        # calculate y between i.y-5, i.y+5 
+        for k in range(-range1, range1+1):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            # inv dict lookup
+            p2 = dinvlookupdict[(jx, jy)]
+            # save trajcount1[(i, p2)]
+            dtrajcount[(i, p2)]=0
+ 
+ # december step 4 
+ #traj. file
+dectfile = "dec2019/2019-9-9-15-0-0-BF1-CL1-Traj(0-18000frames).csv"
+# without timestamps (based on step 4D A)        
+import math
+import csv
+
+trajnum = 0 
+obnum = 1
+
+irow =0
+
+outlier =0
+
+with open(dectfile) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        irow=irow+1
+        trajnum = row[0]
+        frameindex = row[17]
+        #print("frame:",frameindex)
+        if line_count==0:
+            line_count=line_count+1
+            continue
+        if line_count==1:
+            line_count=line_count+1
+            prevrow = row
+            prevx = float(prevrow[6])
+            prevy = float(prevrow[7])
+            # use round instead of floor
+            pfx = round(prevx)
+            pfy = round(prevy)
+            continue
+        # skip if timestamp is 0
+        #timest = float(row[2])
+        #if timest==0:
+        #    continue
+        currx =float(row[6])
+        curry =float(row[7])
+        # instead of floor, use round
+        fx = round(currx)
+        fy = round(curry)
+        if pfx==fx and pfy==fy:
+            prevframe=frameindex
+            line_count = line_count + 1
+            continue
+        if obnum != trajnum:
+            pfx = fx
+            pfy= fy
+            obnum = trajnum
+            prevtrajnum = trajnum
+            prevframe=frameindex
+            line_count = line_count+1
+            continue
+        # now save to the map(i,j)
+        
+        fromi = dinvlookupdict[(pfx,pfy)]
+        #topt = []
+        toi = dinvlookupdict[(fx,fy)]
+        #check if in range 
+        if abs(pfx - fx) >10 or abs(pfy - fy) > 10:
+            xr1 = fx - pfx
+            yr1 = fy - pfy
+            if [pfx, pfy] in listoutliers:
+                # get the list of points + their counts
+                #listptcount = doutlier[fromi]
+                arrayptcount = listoutliers2[fromi]
+                if [fx, fy] in arrayptcount:
+                    doutlier[fromi, toi] = doutlier[fromi, toi]+1
+                else:
+                    arrayptcount.append([fx,fy])
+                    listoutliers2[fromi] = arrayptcount 
+                    doutlier[fromi, toi] = 1 
+            #add to outliers 
+            else:
+                if len(listoutliers) ==0 :
+                    print("hi 0")
+                    listoutliers = [[pfx, pfy]]
+                    listoutliers2[fromi] = [[fx, fy]]
+                    doutlier[fromi, toi] = 1
+                    continue
+                print("hi 1")
+                listoutliers.append([pfx, pfy])
+                listoutliers2[fromi] = [[fx, fy]]
+                doutlier[fromi, toi] = 1 
+            # print to keep track 
+            print("pfx, pfy", pfx, pfy)
+            print("fx, fy", fx, fy)
+            line_count = line_count + 1
+            # skip normal step
+            continue
+
+        mcount = dtrajcount[(fromi,toi)]
+        dtrajcount[(fromi, toi)] = mcount+1
+        # set previous
+        pfx = fx
+        pfy = fy
+        prevframe = frameindex
+        prevtrajnum= trajnum
+        line_count=line_count+1
+
+# december highest freq. subfn
+xmin = -76
+xmax = 109
+ymin=-87
+ymax =116
+
+
+            
+def dhighestfreq(fromi):
+    highest = 0
+    indexhighest = fromi
+    (px, py) = dlookupdict[fromi]
+    for j in range(-10, 11):
+        jx = px+j
+        if jx>xmax-1 or jx<xmin: # check if pts in range
+            continue
+        for k in range(-10, 11):
+            jy = py+k
+            # check if pts are in range
+            if jy>ymax-1 or jy<ymin:
+                continue
+            toi = dinvlookupdict[(jx, jy)]
+            t = dtrajcount[(fromi, toi)]
+            #if t>0:
+                #print(t)
+            if t > highest:
+                highest=t
+                indexhighest=toi
+    return highest, indexhighest
+           
+
+# december step 5 
+dpath = "dec2019/2019-9-9-15-0-0-BF1-CL1(0-18000frames)-Cluster_csv"
+
+arrayx = []
+
+arrayy = []
+# set tarray values as the frame number to track the evolution
+tarray = []
+
+n = 100
+
+firstrow=0
+
+firstrowfirstfile= 0
+obnum =0
+
+previndices=[]
+currentindices=[]
+totalmap = {}
+
+finalarray=[]
+
+xvalues = []
+yvalues = []
+
+hxvalues =[]
+hyvalues= []
+
+prevmap={}
+
+initialcluster=5
+
+search2 = 0
+
+mf = defaultdict(list)
+# maximum object/cluster id in any frame
+mx = 20
+
+for j in range(0, mx):
+    mf[j]=0 
+    
+matchfreq= mf
+# choose start frame
+initialframe = 1
+# choose end frame
+endframe= 70
+
+arrhxvalues=[]
+arrhyvalues=[]
+
+everyframe = 5 
+stepcounter=1
+
+for i in range(initialframe, endframe):
+    #print("i is ",i)
+    name = "Cluster_Frame"
+    name = name+str(i)
+    name = name+".csv"
+    #print(name)
+    pathname = dpath+"/"+name
+    firstrow=0
+    # clear matchfreq
+    for j in range(0, mx):
+        matchfreq[j] =0
+    with open(pathname) as csv_file:
+        f= 0 #  max match freq compare
+        
+        # reset hxvalues , hyvalues
+        hxvalues = []
+        hyvalues=[]
+        
+        currentmap= {}
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        
+        if i==initialframe:
+            #print("i",i)
+            for row in csv_reader:
+                # skip label or first row
+                if firstrowfirstfile==0:
+                    firstrowfirstfile=1
+                    continue
+                clusterid = float(row[0])
+                vehped = float(row[1])
+                #print("clusterid", clusterid)
+                if clusterid==initialcluster and vehped==1:
+                    xpoint = float(row[2])
+                    ypoint = float(row[3])
+                    arrayx.append(xpoint)
+                    arrayy.append(ypoint)
+                    #print("xpoint", xpoint)
+                    #print("ypoint", ypoint)
+                    # change floor to round
+                    xfloor = round(xpoint)
+                    yfloor = round(ypoint)
+                    fromi = invlookupdict[(xfloor,yfloor)]
+                    h1, i1 = highestfreq(fromi)
+                    prevmap[i1] = 1
+                    
+            plt.scatter(arrayx, arrayy)
+            # reset ky 
+            ky = initialcluster
+            continue
+        for row in csv_reader:
+            if firstrow==0:
+                firstrow=1
+                continue
+            vehped = float(row[1])
+            
+            if vehped == 2: 
+                continue # only track vehicles
+            clusterid = float(row[0])
+            
+            if clusterid != obnum:
+                numo1 = float(obnum)
+                # append into dictionary of maps
+                totalmap[numo1] = currentmap
+                if matchfreq[numo1] > f:
+                    f = matchfreq[numo1]
+                    print("f is", f)
+                    ky = numo1
+                    
+                    hxvalues = xvalues
+                    hyvalues = yvalues
+                obnum = clusterid
+                
+                currentindices=[]
+                currentmap= {}
+                
+                xvalues =[]
+                yvalues =[]
+                # append first values
+                xvalues.append(float(row[2]))
+                yvalues.append(float(row[3]))
+                
+                continue
+            xpoint = float(row[2])
+            ypoint = float(row[3])
+            xr = round(xpoint)
+            yr = round(ypoint)
+            xvalues.append(xpoint) # save to array 
+            yvalues.append(ypoint)
+            fromi = dinvlookupdict[(xr,yr)]
+            # function to find highest freq 
+            h1, i1 = dhighestfreq(fromi)
+            # check if in "outliers from" list
+            freqo = 0 
+            
+            if [xr, yr] in listoutliers:
+                # determine highest outlier count + coordinates
+                listofoutliers = listoutliers2[fromi]
+                for outlierpt in listofoutliers:
+                    indexo = dinvlookupdict[(outlierpt[0], outlierpt[1])]
+                    ocount = doutlier[fromi, indexo]
+                    if ocount > freqo:
+                        freqo = ocount
+                        highindo = indexo
+            # compare with dhighestfreq
+            if freqo > h1:
+                i1 = highindo
+            # save to indices
+            currentindices.append(i1) 
+            # save to map
+            currentmap[i1] = 1
+            # check prev map
+            val = prevmap.get(fromi)
+            if val ==None:
+                # do nothing
+                if search2==1:
+                    print("hi")
+            else:
+                numo = float(obnum)
+                matchfreq[numo]= matchfreq[numo]+1
+        # check f values at end of file
+        numo2 = float(obnum)
+        if matchfreq[numo2] > f:
+            ky = numo2
+            hxvalues = xvalues
+            hyvalues = yvalues
+            totalmap[ky]= currentmap
+        finalarray.append(ky)
+        arrhxvalues.extend(hxvalues)
+        arrhyvalues.extend(hyvalues)
+        stepcounter = stepcounter+1
+        
+        if stepcounter == everyframe:
+            plt.scatter(arrhxvalues, arrhyvalues)
+            arrhxvalues=[]
+            arrhyvalues=[]
+            stepcounter = 1
+        
+        # set prevmap
+        if len(hxvalues) !=0:
+            # set prevmap to the one 
+            prevmap = totalmap[ky]
+plt.show()
+        
+    
