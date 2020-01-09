@@ -23,6 +23,10 @@ H = array([[1,0,0,0], [0,1,0,0]])
 # meas noise
 R = array([[0.1,0], [0,0.1]])
 
+B = np.eye(4)
+
+Q = np.eye(4)
+
 # extract measurements from the closest dist clusters frame by frame
 
 # compare the prediction with
