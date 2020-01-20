@@ -1,5 +1,3 @@
-cluster_true= [0,1,2,3,4,5]
-
 # only plot certain groups of clusters 
 # dec step 5 G 2
 
@@ -64,6 +62,7 @@ maxinitclusterid = int(maxinitclusterid)
 for j in range(0, maxinitclusterid):
     initialcluster = j 
     firstrowfirstfile = 0 
+    prevmap= {}
     for i in range(initialframe, endframe):
         name = "Cluster_Frame"
         name = name+str(i)
@@ -101,6 +100,7 @@ for j in range(0, maxinitclusterid):
                         fromi = dinvlookupdict[(xfloor, yfloor)]
                         h1, i1 = dhighestfreq(fromi)
                         prevmap[i1] = 1
+                        prevmap3 = prevmap
                 # plt.scatter(arrayx, arrayy)
                 #add to arrhxvalues
                 
@@ -173,6 +173,7 @@ for j in range(0, maxinitclusterid):
                 hxvalues = xvalues
                 hyvalues = yvalues
                 totalmap[ky] = currentmap
+                
             # finalarray.append(ky)
             arrhxvalues.extend(hxvalues)
             arrhyvalues.extend(hyvalues)
@@ -180,6 +181,7 @@ for j in range(0, maxinitclusterid):
             # set prevmap
             if len(hxvalues) != 0:
                 prevmap = totalmap[ky]
+                
     # at end of this j 
     if j in cluster_true:
         plt.scatter(arrhxvalues, arrhyvalues)
