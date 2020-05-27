@@ -1,12 +1,15 @@
+# fix above code to take care of 1
+
 # check accuracy with datastore.mat
 
+initialcluster=1
 
 #curr_cluster = 0 
 
 initialframe = 1
 endframe = 10 
 
-currentframe = 1
+currentframe = initialframe
 
 #initialcluster 
 
@@ -19,6 +22,8 @@ boolean = 1 # if there is still a next match
 
 rownum = 0
 
+# append from first frame
+
 with open(datastorename) as datastore_csv_file:
     datastore_csv_reader = csv.reader(datastore_csv_file, delimiter=",")
     
@@ -28,21 +33,17 @@ with open(datastorename) as datastore_csv_file:
         # 1 - frame 
         framenum = float(row[0])
         
+        # 2 - cluster id
+        clusterid = float(row[1])
+        matched = float(row[18]) 
+        
         # if past end frame
         if framenum > endframe:
             break
         
         if framenum < initialframe:
             continue
-                
-        # 2 - cluster id
-        clusterid = float(row[1])
-        
-        matched = float(row[18]) 
-        
-        if clusterid == prevmatched:
-            nextmatched = matched
-            boolean = 1 # found the next match
+            
             
         if framenum != currentframe:
             if boolean == 0:
@@ -52,6 +53,7 @@ with open(datastorename) as datastore_csv_file:
                 break # no more next match
                 
             # append to matched
+            print("row num,", rownum)
             result.append(nextmatched)
             
             prevmatched = nextmatched
@@ -60,7 +62,20 @@ with open(datastorename) as datastore_csv_file:
             
             currentframe = framenum
             
+        #print("frame num", framenum)
+                
+        
+        
+
+        
+        if clusterid == prevmatched:
+            nextmatched = matched
+            boolean = 1 # found the next match
+            
+        
+            
         
     
         # keep matching until there is no more next cluster
+        
         
