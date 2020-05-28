@@ -82,7 +82,7 @@ for c in range(initialcluster, endcluster):
                         fromi = dinvlookupdict[(xr,yr)]
                         h1, i1 = dhighestfreq(fromi)
                         prevmap[i1] = 1
-                plt.scatter(arrayx, arrayy)
+                #plt.scatter(arrayx, arrayy)
                 # reset ky 
                 ky = c
                 continue
@@ -241,5 +241,7 @@ for c in range(initialcluster, endcluster):
         if result[i] != listclusterids[i]:
             numincorrect = numincorrect+1
             print("incorrect in ",c)
-            
+    #print('init cluster id', c)
+    print('num incorrect', numincorrect)
     incorrect = incorrect + numincorrect
+    
