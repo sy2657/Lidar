@@ -159,12 +159,12 @@ for c in range(initialcluster, endcluster):
                 totalmap[ky]= currentmap
             finalarray.append(ky)
             # ky is the cluster id with the highest frequency
-            listclusterids.append(ky)
             plt.scatter(hxvalues, hyvalues)
 
             if len(hxvalues) ==0:
                 print("0 h vals")
             if len(hxvalues) !=0:
+                listclusterids.append(ky) # only append if there is match
                 # set prevmap to the one 
 
                 prevmap = totalmap[ky]
