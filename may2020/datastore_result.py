@@ -1,7 +1,7 @@
 # fix above code to take care of 1
 
 # check accuracy with datastore.mat
-
+datastorename = 'newdatastoreMay17.csv'
 initialcluster=1
 
 #curr_cluster = 0 
