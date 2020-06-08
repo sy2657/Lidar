@@ -1,10 +1,11 @@
-# correct procedure   
-
 # complete procedure 2
 
 
+# keep count of total number of comparisons + number of incorrect matches
+totalcomparisons = 0
+
 c1 = 1
-c2 = 7
+c2 = int(clusteridfinal)+1
 
 # new params
 totresults = []
@@ -15,9 +16,11 @@ missedmatching = 0
 wrongmatching =0 # matched to a different cluster
 continuedmatching = 0 # continues erroneously 
 
+
+
 #####
-initialframe = 1
-endframe = 10
+initialframe = 10
+endframe = 20
 
 
 for c in range(c1, c2):
@@ -227,6 +230,12 @@ for c in range(c1, c2):
 
                 # append to matched
                 print("row num,", rownum)
+                
+                # if nextmatched is nan, ignore
+                
+                if str(nextmatched) == 'nan':
+                    break
+                    
                 result.append(nextmatched)
 
                 prevmatched = nextmatched
@@ -262,6 +271,8 @@ for c in range(c1, c2):
             continuedmatching = continuedmatching+1 
             # print
             print("continued matching", initialcluster)
+            print("our result", listclusterids)
+            print("datastore result", result)
             totalcomparisons = totalcomparisons +1
             
         if len2 < len1: # missed matching
@@ -269,15 +280,20 @@ for c in range(c1, c2):
             missedmatching = missedmatching+1
             totalcomparisons = totalcomparisons+1
             print("missed matching", initialcluster)
+            print("our result", listclusterids)
+            print("datastore result", result)
             
 
         for i in range(0, setlen):
             totalcomparisons = totalcomparisons+1
             if result[i] != listclusterids[i]:
-                numincorrect = numincorrect+1
+                wrongmatching = wrongmatching+1
+                #numincorrect = numincorrect+1
                 print("incorrect in ",c)
+                print("wrong:datastore result",result[i])
+                print("wrong:our result",listclusterids[i])
         #print('init cluster id', c)
-        print('num incorrect', numincorrect)
+        #print('num incorrect', numincorrect)
         # incorrect = total wrong matchings 
         incorrect = incorrect + numincorrect 
 
