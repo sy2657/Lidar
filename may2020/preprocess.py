@@ -211,3 +211,18 @@ with open(tfile) as csv_file:
         prevframe = frameindex
         prevtrajnum= trajnum
         line_count=line_count+1
+
+        
+# code to find out the num of clusters in the current frame
+
+i = 10 # start frame 
+name = "file_out"
+name = name+str(i)
+name = name+".csv"
+firstrow=0
+
+with open(name) as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=",")
+
+    for row in csv_reader:
+        clusteridfinal = row[0]
