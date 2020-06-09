@@ -287,24 +287,33 @@ for c in range(c1, c2):
                         continuedmatching = continuedmatching-1
             
         if len2 < len1: # missed matching
+            # find if there is a wrong matching first 
             setlen = len2
-            missedmatching = missedmatching+1
+            wrongfirst =0
+            for j1 in range(0, setlen):
+                if result[j1] != listclusterids[j1]:
+                    #wrongmatching = wrongmatching+1 : count the wrong matching in below
+                    print("wrong first in missed matching in", c)
+                    wrongfirst=1
+            if wrongfirst ==0:
+                missedmatching = missedmatching+1
+                print("missed matching", initialcluster)
+                print("our result", listclusterids)
+                print("datastore result", result)
             totalcomparisons = totalcomparisons+1
-            print("missed matching", initialcluster)
-            print("our result", listclusterids)
-            print("datastore result", result)
+            
             
         ## june 7 note: edit to not count errors based on lidar similar labeled clusters file 
         ## also: count wrong based on one transition 
 
-        for i in range(0, setlen):
+        for j in range(0, setlen):
             totalcomparisons = totalcomparisons+1
-            if result[i] != listclusterids[i]:
+            if result[j] != listclusterids[j]:
                 wrongmatching = wrongmatching+1
                 #numincorrect = numincorrect+1
                 print("incorrect in ",c)
-                print("wrong:datastore result",result[i])
-                print("wrong:our result",listclusterids[i])
+                print("wrong:datastore result",result[j])
+                print("wrong:our result",listclusterids[j])
                 # break because it is wrong after 1 frame
                 break 
         #print('init cluster id', c)
