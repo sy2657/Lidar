@@ -1,12 +1,23 @@
+# sample run code
+ca = [3,4]
+iframe = 2
+res = []
+
+# must repeat this function for each element in cluster array
+for el in ca:
+    nc = findnextcluster(iframe, el)
+    res.append(nc)
+
 # find the next cluster from our algorithm
 
 # iterate over all the clusters in frame len1+1 to see 
 # iframe is frame number 
 
-def findnextcluster(iframe, clusterarray):  # iframe is the current cluster, clusterarray holds ids of similar clusters 
+def findnextcluster(iframe, elementclusterarray):  # iframe is the current cluster, clusterarray holds ids of similar clusters 
 
     # sort by increasing order
-    sortedarray = np.sort(clusterarray)
+    #sortedarray = np.sort(clusterarray)
+    
     name = "file_out"
     name = name+str(iframe)
     name1 = name+".csv"
@@ -35,7 +46,7 @@ def findnextcluster(iframe, clusterarray):  # iframe is the current cluster, clu
             # function to find highest freq 
             h1, i1 = dhighestfreq(fromi)
 
-            if cid in clusterarray:
+            if cid ==  elementclusterarray:
                 countmap[i1] = 1
 
     obnum = 1 
