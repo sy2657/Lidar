@@ -95,6 +95,7 @@ if len1 < len2: # continued matching
         v = errorclusters.get(initialframe+ setlen) # similar clusters to last a2 element 
         v2 = errorclusters.get(initialframe+setlen+1) # similar clusters to last a1 element
         
+        print("v2 index", initialframe+setlen+1)
         existsimilarlast1 = 0
         existsimilar2 = 0
         
@@ -119,11 +120,17 @@ if len1 < len2: # continued matching
                         for a in arraywithlast:
                             nc = appfindnextcluster(iframe, a)
                             res2.append(nc)
-                for el2 in simlast1:
-                    if el2 in res2:
-                        print("match discont. cont. matching")
-                        contmatching =0 # false cont. matching
-                    
+                # if v2 is not none
+                if v2 == None:
+                    if last1 in res2:
+                        print("match discont. v2")
+                        contmatching=0
+                if v2!=None:
+                    for el2 in simlast1:
+                        if el2 in res2:
+                            print("match discont. cont. matching")
+                            contmatching =0 # false cont. matching
+
             else:
                 res2 = []
                 # scenario 2 
