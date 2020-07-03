@@ -1,6 +1,6 @@
-def appfindnextclusterdist(initialcluster, iframe): # frame and cluster
+def appfindnextcluster(initialcluster, iframe): # frame and cluster
     datastorename = 'newdatastoreMay17.csv'
-
+    outputmatched =0
     with open(datastorename) as datastore_csv_file:
         datastore_csv_reader = csv.reader(datastore_csv_file, delimiter=",")
 
