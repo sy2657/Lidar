@@ -17,6 +17,7 @@ def findnextcluster(iframe, elementclusterarray):  # iframe is the current clust
 
     # sort by increasing order
     #sortedarray = np.sort(clusterarray)
+    ky =0 
     
     name = "file_out"
     name = name+str(iframe)
