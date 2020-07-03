@@ -17,6 +17,8 @@ print(len2)
 
 setlen = min(len1, len2)
 
+iframe = initialframe+setlen
+
 removemissed= 0
 removecontinued =0 
 
