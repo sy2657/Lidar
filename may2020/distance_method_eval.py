@@ -21,6 +21,7 @@ iframe = initialframe+setlen
 
 removemissed= 0
 removecontinued =0 
+contmatching = 1
 
 if len2 < len1: # missed matching
     # find if there is a wrong matching first 
