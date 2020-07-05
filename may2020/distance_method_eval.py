@@ -17,11 +17,11 @@ print(len2)
 
 setlen = min(len1, len2)
 
-iframe = initialframe+setlen
-
 removemissed= 0
 removecontinued =0 
-contmatching = 1
+contmatching =1 
+
+iframe = initialframe+setlen
 
 if len2 < len1: # missed matching
     # find if there is a wrong matching first 
@@ -30,7 +30,7 @@ if len2 < len1: # missed matching
     for j1 in range(0, setlen):
         if result[j1] != listclusterids[j1]:
             #wrongmatching = wrongmatching+1 : count the wrong matching in below
-            print("wrong first in missed matching in", c)
+            print("wrong first in missed matching in", c, "at frame",i)
             wrongfirst=1
     # check last element of our array for similar clusters which may match to next cluster of app
     lastelement = listclusterids[setlen]
@@ -53,7 +53,8 @@ if len2 < len1: # missed matching
                     arraywithlast = el
                     for a in arraywithlast:
                         nc = findnextclusterdist(iframe, a)
-                        res.append(nc)
+                        if nc!= 0:
+                            res.append(nc)
             nextlen =len2
             print("res next len", result[nextlen])
             print("res", res)
@@ -71,9 +72,10 @@ if removemissed==1:
 
 if len1 < len2: # continued matching 
     setlen = len1 -1 
+    iframe = initialframe + setlen
     # must check if wrong first (too)
     wrongfirstcont = 0  # keep this as an indicator for comparison 
-
+    #contmatching= 1 # do not remove cont. matching
     for j2 in range(0, len1 - 1 ): 
         if result[j2] != listclusterids[j2]:
             # first check errorclusters 
@@ -102,6 +104,8 @@ if len1 < len2: # continued matching
         existsimilarlast1 = 0
         existsimilar2 = 0
         
+        print("iframe", iframe)
+        
         contmatching = 1
         #print("v2" , v2)
         if v2 != None:
@@ -115,14 +119,17 @@ if len1 < len2: # continued matching
             errorarray = errorclusters[initialframe+setlen]
                         
             if seclast1 ==last2: #scenario 1 
+                print("scenario 1")
             # if it is in similar clusters
                 res2 = []
                 for el in errorarray:
                     if last2 in el:
                         arraywithlast = el
                         for a in arraywithlast:
+                            #print("iframe,", iframe,"a",a)
                             nc = appfindnextcluster(iframe, a)
-                            res2.append(nc)
+                            if nc != 0:
+                                res2.append(nc)
                 # if v2 is not none
                 if v2 == None:
                     if last1 in res2:
@@ -149,7 +156,8 @@ if len1 < len2: # continued matching
                     for s in sim:
                         print("iframe", iframe)
                         nc = appfindnextcluster(iframe, s)
-                        res2.append(nc)
+                        if nc != 0:
+                            res2.append(nc)
                     print("res2", res2)
                 if v2 == None:
                     #print("last1", last1)
