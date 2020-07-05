@@ -1,4 +1,4 @@
-def appfindnextcluster(initialcluster, iframe): # frame and cluster
+def appfindnextcluster(iframe, initialcluster): # frame and cluster
     datastorename = 'newdatastoreMay17.csv'
     outputmatched =0
     with open(datastorename) as datastore_csv_file:
@@ -19,7 +19,6 @@ def appfindnextcluster(initialcluster, iframe): # frame and cluster
 
             if clusterid == initialcluster:
                 outputmatched = matched
-                
-            if framenum > iframe+1:
-                break
+                return outputmatched
+            
     return outputmatched
