@@ -85,7 +85,7 @@ if len1 < len2: # continued matching
     if wrongfirstcont ==0:
         print("cont. matching at ",c)
         continuedmatching = continuedmatching+1
-        totalcomparisons = totalcomparisons + 1
+        totalcomparisons = totalcomparisons + setlen
         # scenario 1 : step 1: compare last el of result 
         
         seclast1 = listclusterids[setlen]
