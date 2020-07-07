@@ -175,7 +175,7 @@ if contmatching == 0: #removecontinued==1:
     continuedmatching = continuedmatching-1
     clustering_error= clustering_error+1
 
-if removedmissed==1 or contmatching==0:
+if removemissed==1 or contmatching==0:
     print("do not check wrong")
 else:
     for j in range(0, setlen):
