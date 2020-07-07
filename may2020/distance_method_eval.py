@@ -175,19 +175,22 @@ if contmatching == 0: #removecontinued==1:
     continuedmatching = continuedmatching-1
     clustering_error= clustering_error+1
 
-for j in range(0, setlen):
-    frameno = initialframe+j
-    totalcomparisons = totalcomparisons+1
-    if result[j] != listclusterids[j]:
-        # first check errorclusters for wrong found
-        v = errorclusters.get(frameno)
-        if v!= None:
-            if result[j] in v:
-                if listclusterids[j] in v:
-                    print("no longer wrong")
-                    break
-        print("wrong found")
-        wrongmatching = wrongmatching+1
-        break 
+if removedmissed==1 or contmatching==0:
+    print("do not check wrong")
+else:
+    for j in range(0, setlen):
+        frameno = initialframe+j
+        totalcomparisons = totalcomparisons+1
+        if result[j] != listclusterids[j]:
+            # first check errorclusters for wrong found
+            v = errorclusters.get(frameno)
+            if v!= None:
+                if result[j] in v:
+                    if listclusterids[j] in v:
+                        print("no longer wrong")
+                        break
+            print("wrong found")
+            wrongmatching = wrongmatching+1
+            break 
 
                     
