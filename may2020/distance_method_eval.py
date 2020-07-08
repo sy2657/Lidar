@@ -27,11 +27,18 @@ if len2 < len1: # missed matching
     # find if there is a wrong matching first 
     setlen = len2-1 # do not compare the last element
     wrongfirst =0
+    nolongerwrong =0
     for j1 in range(0, setlen):
+        frameno1 = initialframe+j1
         if result[j1] != listclusterids[j1]:
-            #wrongmatching = wrongmatching+1 : count the wrong matching in below
-            print("wrong first in missed matching in", c, "at frame",i)
-            wrongfirst=1
+            v1 = errorclusters.get(frameno1)
+            if v1 != None:
+                if result[j1] in v1:
+                    if listclusterids[j1] in v1:
+                        nolongerwrong=1
+            if nolongerwrong!= 1:
+                print("wrong first in missed matching in", c, "at frame",i)
+                wrongfirst=1
     # check last element of our array for similar clusters which may match to next cluster of app
     lastelement = listclusterids[setlen]
     if wrongfirst ==0:
