@@ -82,12 +82,18 @@ if len1 < len2: # continued matching
     iframe = initialframe + setlen
     # must check if wrong first (too)
     wrongfirstcont = 0  # keep this as an indicator for comparison 
-    #contmatching= 1 # do not remove cont. matching
+    nolongerwrong2 = 0
     for j2 in range(0, len1 - 1 ): 
+        frameno2 = initialframe+j2
         if result[j2] != listclusterids[j2]:
             # first check errorclusters 
-            #print("wrong first in continued matching in", c)
-            wrongfirstcont = 1
+            v1 = errorclusters.get(frameno2)
+            if v1 != None:
+                if result[j2] in v1:
+                    if listclusterids[j2] in v1:
+                        nolongerwrong2 = 1
+            if nolongerwrong2 != 1:
+                wrongfirstcont = 1
             
     if wrongfirstcont ==0:
         print("cont. matching at ",c)
