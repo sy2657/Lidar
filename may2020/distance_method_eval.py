@@ -49,7 +49,7 @@ if len2 < len1: # missed matching
         print("missed matching at,", c)
         #print("length of missed", len2)
         missedmatching = missedmatching+1
-        totalcomparisons = totalcomparisons+setlen 
+        totalcomparisons = totalcomparisons+len2 
         
         v = errorclusters.get(initialframe+ setlen)
         iframe = initialframe+setlen
@@ -103,7 +103,7 @@ if len1 < len2: # continued matching
         continuedflag= 1
         print("cont. matching at ",c)
         continuedmatching = continuedmatching+1
-        totalcomparisons = totalcomparisons + setlen
+        totalcomparisons = totalcomparisons + len1
         # scenario 1 : step 1: compare last el of result 
         
         seclast1 = listclusterids[setlen]
