@@ -120,6 +120,7 @@ if len1 < len2: # continued matching
         print("iframe", iframe)
         
         contmatching = 1
+        simlast1 = []
         #print("v2" , v2)
         if v2 != None:
             for gp in v2:
