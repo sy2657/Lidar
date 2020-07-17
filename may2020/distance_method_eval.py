@@ -20,6 +20,9 @@ setlen = min(len1, len2)
 removemissed= 0
 removecontinued =0 
 contmatching =1 
+# ADDED
+missedflag =0
+continuedflag=0
 
 iframe = initialframe+setlen
 
@@ -42,6 +45,7 @@ if len2 < len1: # missed matching
     # check last element of our array for similar clusters which may match to next cluster of app
     lastelement = listclusterids[setlen]
     if wrongfirst ==0:
+        missedflag = 1
         print("missed matching at,", c)
         #print("length of missed", len2)
         missedmatching = missedmatching+1
@@ -96,6 +100,7 @@ if len1 < len2: # continued matching
                 wrongfirstcont = 1
             
     if wrongfirstcont ==0:
+        continuedflag= 1
         print("cont. matching at ",c)
         continuedmatching = continuedmatching+1
         totalcomparisons = totalcomparisons + setlen
@@ -189,7 +194,7 @@ if contmatching == 0: #removecontinued==1:
     continuedmatching = continuedmatching-1
     clustering_error= clustering_error+1
 
-if removemissed==1 or contmatching==0:
+if missedflag==1 or continuedflag==1:
     print("do not check wrong")
 else:
     for j in range(0, setlen):
