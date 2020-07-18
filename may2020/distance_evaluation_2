@@ -1,0 +1,93 @@
+# evaluation 2
+
+missedmatching=0
+continuedmatching=0
+wrongmatching=0
+clustering_error = 0
+totalcomparisons = 0
+
+# lengths 
+len1 = len(result) #datastore result
+len2 = len(listclusterids) # our result 
+
+removemissed= 0
+removecontinued =0 
+contmatching =1 
+# ADDED
+missedflag =0
+continuedflag=0
+
+iframe = initialframe+min(len1, len2)
+
+# calculate diff
+difflen = max(len1, len2) - min(len1, len2)
+# iterate over shorter length 
+
+setlen = min(len1, len2)
+
+# check which are not matching
+nonmatchingframes = []
+nonmatchingids1 = [] # corresponding ids from app
+nonmatchingids2 = [] # corresponding ids other method
+
+# orig dictionary
+od1 = {} # app 
+od2 = {}
+
+nolongerwrong = 0
+for j1 in range(0, setlen):
+    frameno = initialframe+j1
+    od1[frameno] = [result[j1]]
+    od2[frameno] = [listclusterids[j1]]
+    if result[j1] != listclusterids[j1]:
+        v1 = errorclusters.get(frameno)
+        if v1 != None:
+            if result[j1] in v1:
+                if listclusterids[j1] in v1:
+                    nolongerwrong=1
+        if nolongerwrong != 1:
+            nonmatchingframes.append(frameno)
+            nonmatchingids1.append(result[j1])
+            nonmatchingids2.append(listclusterids[j1])
+
+# dictionary: frameno -> set of clusters for both results
+d1 = {}
+d2 = {}
+# find path from each sim cluster
+for j1 in range(0, setlen):
+    frameno = initialframe+j1
+    # check similar clusters
+    clusters1 = []
+    clusters2 = []
+    
+    simclusters = errorclusters.get(frameno)
+    if simclusters != None:
+        simarray = errorclusters[frameno]
+        # check if matches
+        for el in simarray:
+            if od1[frameno] in el:
+                clusters1.extend(el)
+            if od2[frameno] in el:
+                clusters2.extend(el)
+    d1[frameno] = clusters1
+    d2[frameno] = clusters2
+
+# find matches
+nonmatchlen = len(nonmatchingframes)
+
+# find all paths 
+
+for i1 in range(0, nonmatchlen):
+    frame1 = nonmatchingframes[i1]
+    ids1 = nonmatchingids1[i1]
+    ids2 = nonmatchingids2[i1]
+    # find paths to frame1 
+    
+    # check dictionaries
+    d1array = d1[frame1]
+    d2array = d2[frame1]
+    o1 = od1[frame1]
+    o2 = od2[frame1]
+    # stop when match not found 
+    # look for match between o1 and 
+    
