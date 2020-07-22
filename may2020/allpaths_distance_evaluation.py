@@ -204,15 +204,21 @@ for b in booleanwrong:
         break
     bindex= bindex+1
 
-if firstframewrong==len1:
-    print("continued")
-    continuedmatching=continuedmatching+1
+contflag=0
+missedflag=0
+if np.sum(booleanwrong) >0:
+    
+    if firstframewrong>len1:
+        print("continued")
+        contflag=1
+        continuedmatching=continuedmatching+1
 
-if firstframewrong==len2:
-    print("missed")
-    missedmatching= missedmatching+1
+    if firstframewrong > len2:
+        print("missed")
+        missedflag=1
+        missedmatching= missedmatching+1
+ 
+    if contflag==0 and missedflag==0:
+        print("wrong)
+        wrongmatching=wrongmatching+1
 
-# else, wrong
-if firstframewrong!=len1 and firstframewrong!=len2:
-    if np.sum(booleanwrong)>0:
-        print("wrong")
