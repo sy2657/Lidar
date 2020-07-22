@@ -191,6 +191,7 @@ for j in range(0, maxlen):
         if len(intersect) >0:
             print("intersect")
             booleanwrong[j]=0 
+            clustering_error= clustering_error+1
 
 # last step: find first frame where it is wrong:
 #if is last element of array1 -> continued
