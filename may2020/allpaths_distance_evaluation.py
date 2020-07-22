@@ -175,6 +175,8 @@ for j in range(0, maxlen):
     
     for c2 in clust2:
         nc2 = findnextclusterdist(frameno, c2)
+        if nc2 ==-1:
+            continue
         nclust2 = d2[frameno+1]
         if nc2 not in nclust2:
             nclust2.append(nc2)
