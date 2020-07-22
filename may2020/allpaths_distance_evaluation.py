@@ -163,6 +163,8 @@ for j in range(0, maxlen):
     # check clusters to next step
     for c1 in clust1:
         nc1 = findnextclusterapp(frameno, c1)
+        if str(nc1) =="nan":
+            continue
         #print("frameno plus one", frameno+1)
         #print("nc1", nc1)
         nclust1 = d1[frameno+1]
