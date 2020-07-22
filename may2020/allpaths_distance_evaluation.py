@@ -135,8 +135,8 @@ for j2 in range(setlen, maxlen):
     if len2>len1:
         d2[frameno]=[listclusterids[j2]]
 
-d1[initialframe+maxlen+1] = []
-d2[initialframe+maxlen+1] = []
+d1[initialframe+maxlen] = []
+d2[initialframe+maxlen] = []
 
 # evaluation 3
 
