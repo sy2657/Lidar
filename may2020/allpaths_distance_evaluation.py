@@ -206,7 +206,12 @@ for b in booleanwrong:
         firstframewrong = bindex
         break
     bindex= bindex+1
-
+    
+if firstframewrong == -1:
+    totalcomparisons= totalcomparisons+maxlen
+else:
+    totalcomparisons= totalcomparisons+firstframewrong
+    
 contflag=0
 missedflag=0
 if np.sum(booleanwrong) >0:
