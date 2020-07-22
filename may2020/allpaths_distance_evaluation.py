@@ -196,11 +196,12 @@ for j in range(0, maxlen):
 #if is last element of array1 -> continued
 #if is last element of array2 -> missed
 # else: wrong 
-bindex = 0
+bindex = 1
 firstframewrong = -1
 for b in booleanwrong:
     if b == 1:
         firstframewrong = bindex
+        break
     bindex= bindex+1
 
 if firstframewrong==len1:
