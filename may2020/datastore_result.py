@@ -53,7 +53,10 @@ with open(datastorename) as datastore_csv_file:
                 break # no more next match
                 
             # append to matched
-            print("row num,", rownum)
+            #print("row num,", rownum)
+            if str(nextmatched) == "nan":
+                break
+            
             result.append(nextmatched)
             
             prevmatched = nextmatched
