@@ -28,11 +28,13 @@ booleanwrong = []
 
 for j1 in range(0, setlen):
     nolongerwrong = 0
+    nolongerwrongoriginal = 0 
     frameno = initialframe+j1
     od1[frameno] = [result[j1]] # original dictionary 
     od2[frameno] = [listclusterids[j1]]
     if result[j1] == listclusterids[j1]:
         nolongerwrong=1
+        nolongerwrongoriginal=1
     if result[j1] != listclusterids[j1]:
         v1 = errorclusters.get(frameno)
         print("j1", j1, "frameno", frameno)
@@ -47,6 +49,8 @@ for j1 in range(0, setlen):
         booleanwrong.append(1) # wrong
     else:
         booleanwrong.append(0) # not wrong 
+        if nolongerwrongoriginal ==0:
+            clustering_error=clustering_error+1
         
 maxlen= max(len1, len2)
 
