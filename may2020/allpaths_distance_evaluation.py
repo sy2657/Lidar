@@ -61,7 +61,7 @@ if len1 != len2:
 # iterate over setlen to max len
     for j2 in range(setlen, maxlen):
         nolongerwrong=0
-        
+        nolongerwrongoriginal = 0
         frameno2 = initialframe+j2
         
         if len1 > len2:
@@ -69,6 +69,7 @@ if len1 != len2:
             next2 = findnextclusterdist(frameno2, last2)
             if next2 == result[j2]:
                 nolongerwrong=1
+                nolongerwrongoriginal= 1
                 #booleanwrong.append(0)
             # check error clusters
             v2 = errorclusters.get(frameno2)
@@ -81,6 +82,8 @@ if len1 != len2:
                             nolongerwrong=1
             if nolongerwrong==1:
                 booleanwrong.append(0) # not wrong
+                if nolongerwrongoriginal==0:
+                    clustering_error=clustering_error+1
             else:
                 booleanwrong.append(1) # wrong
             
@@ -91,6 +94,7 @@ if len1 != len2:
             next2 = findnextclusterapp(frameno2, last2)
             if next2 == listclusterids[j2]:
                 nolongerwrong=1
+                nolongerwrongoriginal = 1
             v2 = errorclusters.get(frameno2)
             if v2 != None:
                 errorarray = errorclusters[frameno2]
@@ -100,6 +104,8 @@ if len1 != len2:
                             nolongerwrong=1
             if nolongerwrong==1:
                 booleanwrong.append(0)
+                if nolongerwrongoriginal==0:
+                    clustering_error= clustering_error+1
             else:
                 booleanwrong.append(1) # wrong
             last2 = next2
