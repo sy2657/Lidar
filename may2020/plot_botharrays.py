@@ -75,7 +75,7 @@ for i in range(initialframe, initialframe+alen2):
         #plt.scatter(xarray,yarray)
     
     acounter =acounter +1
-    if acounter > alen:
+    if acounter > alen2:
         break
 
 
