@@ -1,9 +1,11 @@
+# complete procedure 2
+
 
 # keep count of total number of comparisons + number of incorrect matches
 totalcomparisons = 0
 
 c1 = 1
-c2 = int(clusteridfinal)+1
+c2 = 7
 
 # new params
 totresults = []
@@ -14,14 +16,14 @@ missedmatching = 0
 wrongmatching =0 # matched to a different cluster
 continuedmatching = 0 # continues erroneously 
 
-
+clustering_error = 0 
 
 #####
 initialframe = 10
 endframe = 20
 
 
-for c in range(c1, c2):
+for c in range(c1, c2+1):
     arrayx = []
     arrayy=[]
 
@@ -59,7 +61,7 @@ for c in range(c1, c2):
 
     matchfreq= mf
 
-    for i in range(initialframe, endframe):
+    for i in range(initialframe, endframe+1):
         name = "file_out"
         name = name+str(i)
         name = name+".csv"
@@ -182,14 +184,17 @@ for c in range(c1, c2):
             # obnum
 
     plt.show()
-	currentframe = initialframe
-	result = []
+    currentframe = initialframe
+
+    #initialcluster 
+
+    result = []
     result.append(initialcluster)
     
     iframe = initialframe
     currentcluster = initialcluster
-    t =True
-	while t:
+    t = True
+    while t:
         nextres = findnextclusterapp(iframe, currentcluster)
         if str(nextres) == "nan":
             break
@@ -198,16 +203,16 @@ for c in range(c1, c2):
         result.append(nextres)
         iframe = iframe+1
         currentcluster = nextres
-		
-	# acc eval
-	len1 = len(result) #datastore result
+        
+    len1 = len(result) #datastore result
     len2 = len(listclusterids) # our result 
 
     setlen = min(len1, len2)
-	od1 = {}
+    od1 = {}
     od2 = {}
     booleanwrong=[]
-	for j1 in range(0,setlen):
+    
+    for j1 in range(0,setlen):
         nolongerwrong=0
         nolongerwrongoriginal=0
         frameno=initialframe+j1
@@ -230,29 +235,23 @@ for c in range(c1, c2):
             booleanwrong.append(0) # not wrong
             if nolongerwrongoriginal==0:
                 clustering_error = clustering_error+1
+
     maxlen= max(len1, len2)
     last1 = result[setlen-1]
     last2 = listclusterids[setlen-1]
-	
-	# clustering_error incrementation
-	if len1 != len2:
-	# iterate over setlen to max len
+    
+    if len1 != len2:
+# iterate over setlen to max len
         for j2 in range(setlen, maxlen):
             nolongerwrong=0
-			nolongerwrongoriginal=0
+            nolongerwrongoriginal = 0 
             frameno2 = initialframe+j2
-
             if len1 > len2:
-                # look up
                 next2 = findnextcluster(frameno2, last2)
-                
                 if next2 == result[j2]:
                     nolongerwrong=1
-					nolongerwrongoriginal=1
-                    #booleanwrong.append(0)
-                # check error clusters
+                    nolongerwrongoriginal=1
                 v2 = errorclusters.get(frameno2)
-                #print("v2", v2)
                 if v2 != None:
                     errorarray = errorclusters[frameno2]
                     for el in errorarray:
@@ -260,20 +259,17 @@ for c in range(c1, c2):
                             if next2 in el:
                                 nolongerwrong=1
                 if nolongerwrong==1:
-                    booleanwrong.append(0) # not wrong
-					if nolongerwrongoriginal==0:
-						clustering_error=clustering_error+1
+                    booleanwrong.append(0)
+                    if nolongerwrongoriginal ==0:
+                        clustering_error= clustering_error+1
                 else:
-                    booleanwrong.append(1) # wrong
-
+                    booleanwrong.append(1)
                 last2 = next2
-                # look up 
-
             if len2 > len1:
                 next2 = findnextclusterapp(frameno2, last2)
                 if next2 == listclusterids[j2]:
                     nolongerwrong=1
-					nolongerwrongoriginal=1
+                    nolongerwrongoriginal=1
                 v2 = errorclusters.get(frameno2)
                 if v2 != None:
                     errorarray = errorclusters[frameno2]
@@ -283,14 +279,15 @@ for c in range(c1, c2):
                                 nolongerwrong=1
                 if nolongerwrong==1:
                     booleanwrong.append(0)
-					if nolongerwrongoriginal==0:
-						clustering_error= clustering_error+1
+                    if nolongerwrongoriginal==0:
+                        clustering_error=clustering_error+1
                 else:
                     booleanwrong.append(1) # wrong
                 last2 = next2
-	d1 = {}
-	d2 = {}
-	for j1 in range(0, setlen):
+    d1 = {}
+    d2 = {}
+    
+    for j1 in range(0, setlen):
         frameno = initialframe+j1
         # check similar clusters
         clusters1 = od1[frameno]
@@ -307,9 +304,8 @@ for c in range(c1, c2):
                     clusters2.extend(el)
         d1[frameno] = clusters1
         d2[frameno] = clusters2
-		
-	# add empty entries for setlen to maxlen
-	maxlen= max(len1, len2)
+        
+    maxlen= max(len1, len2)
     # set original clusters for up to maxlen
     for j2 in range(setlen, maxlen):
         frameno = initialframe+j2
@@ -322,51 +318,52 @@ for c in range(c1, c2):
 
     d1[initialframe+maxlen] = []
     d2[initialframe+maxlen] = []
-	
-	# evaluation 3 
-	for j in range(0, maxlen):
+    setlen = min(len1, len2)
+    maxlen= max(len1,len2)
+    
+    for j in range(0, maxlen):
 
         frameno = initialframe+j 
-        print("j is", j)
-        print("frame num is", frameno)
+        #print("j is", j)
+        #print("frame num is", frameno)
 
         # all clusters within current frame
         clust1 = d1[frameno]
         clust2 = d2[frameno]
-		
-		for c1 in clust1:
-			nc1 = findnextclusterapp(frameno,c1)
-			if str(nc1) == "nan":
-                print("nc1 is nan")
+
+
+        # check clusters to next step
+        for c1 in clust1:
+            nc1 = findnextclusterapp(frameno, c1)
+            if str(nc1) == "nan":
+                #print("nc1 is nan")
                 continue
-			nclust1 = d1[frameno+1]
+            #print("frameno plus one", frameno+1)
+            #print("nc1", nc1)
+            nclust1 = d1[frameno+1]
             # only append if not already there
             if nc1 not in nclust1:
                 nclust1.append(nc1)
+            #nclust1.append(nc1)
+            #nclust1 = np.unique(nclust1)
             d1[frameno+1] = nclust1
-			
-		for c2 in clust2:
-            #print("frame", frameno)
-            #print("clust", c2)
-            nc2 = findnextcluaster(frameno, c2)
+        for c2 in clust2:
+            nc2 = findnextcluster(frameno, c2)
             if nc2 == -1:
                 continue
             nclust2 = d2[frameno+1]
             if nc2 not in nclust2:
                 nclust2.append(nc2)
             d2[frameno+1] = nclust2
-			
-		if booleanwrong[j] == 1: # look for wrong
-            # look for matching id from both arrays
-            
+        if booleanwrong[j]==1:
             set1 = set(clust1)
-            intersect= set1.intersection(clust2)
-            if len(intersect) >0:
+            intersect = set1.intersection(clust2)
+            if len(intersect)>0:
                 print("intersect")
-                booleanwrong[j]=0 
-                # increment clustering error
-                clustering_error = clustering_error+1
-	bindex = 1
+                booleanwrong[j]=0
+                clustering_error=clustering_error+1
+
+    bindex = 1
     firstframewrong = -1
     for b in booleanwrong:
         if b == 1:
@@ -378,11 +375,12 @@ for c in range(c1, c2):
         totalcomparisons= totalcomparisons+maxlen
     else:
         totalcomparisons= totalcomparisons+firstframewrong
-	contflag=0
-	missedflag=0
-	
-	if np.sum(booleanwrong)>0:
-		if firstframewrong>len1:
+        
+    contflag = 0
+    missedflag= 0
+    
+    if np.sum(booleanwrong) >0:
+        if firstframewrong>len1:
             print("continued")
             print("array1", result)
             print("array2", listclusterids)
@@ -402,4 +400,6 @@ for c in range(c1, c2):
         
         if contflag==1 and missedflag==1:
             print("BOTH CONTINUED AND MISSED")
-        
+                
+
+    
