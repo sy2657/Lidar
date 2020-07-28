@@ -177,6 +177,7 @@ for c in range(c1, c2+1):
 
             if len(hxvalues) ==0:
                 print("0 h vals")
+                break
             if len(hxvalues) !=0:
                 # set prevmap to the one 
                 listclusterids.append(ky) # only append if there is next match
