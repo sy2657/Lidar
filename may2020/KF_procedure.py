@@ -177,17 +177,22 @@ from numpy import *
 
 # main procedure
 
+# KF step 7  (one cluster)
+
 ### input parameters
 initialframe = 1
 n = 10 # ending frame 
  
-initialcluster = 1
+initialcluster = 2
 
 ###
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import csv
+
+velx= avx/10
+vely=avy/10
 
 
 # array to be plotted
@@ -267,6 +272,36 @@ currentdistances = []
 outputclusters = []
 outputclusters.append(initialcluster)
 
+    
+pathname = "file_out"+str(initialframe)+".csv"
+firstrow=0
+    
+xvalues1= []
+yvalues1 = []
+
+with open(pathname) as csv_file:
+    m = f
+    currentmap={}
+    csv_reader = csv.reader(csv_file, delimiter=",")
+
+    for row in csv_reader:
+        # don't skip first row
+        clusterid = float(row[0])
+        xpoint = float(row[1])
+        ypoint = float(row[2])
+        if clusterid == initialcluster:
+            xvalues1.append(xpoint)
+            yvalues1.append(ypoint)
+# find x1 based on icluster 
+avx1 = np.mean(xvalues1)
+avy1 = np.mean(yvalues1)
+
+print("start point x", avx1)
+print("start point y", avy1)
+
+x1 = array(([[avx1], [avy1], [velx], [vely]])) 
+
+
 for i in range(initialframe+1, n): # not need to process initial frame
     pathname = "file_out"+str(i)+".csv"
     firstrow=0
@@ -305,6 +340,9 @@ for i in range(initialframe+1, n): # not need to process initial frame
             yvalues.append(ypoint)
             currentcluster = clusterid
             
+            print("x1", x1)
+            print("x1[0]", x1[0])
+            
             # distance from predicted point x1
             dx1 = x1[0] - xpoint
             dy1 = x1[1] - ypoint
@@ -318,6 +356,8 @@ for i in range(initialframe+1, n): # not need to process initial frame
             if meandistances <m:
                 m = meandistances
                 ky =j
+                print("cluster", clusters[ky])
+                
         outputclusters.append(clusters[ky])
         hxvalues = totxvalues[ky]
         hyvalues = totyvalues[ky]
@@ -325,16 +365,23 @@ for i in range(initialframe+1, n): # not need to process initial frame
         avx = np.mean(hxvalues)
         avy = np.mean(hyvalues)
         
+        #print("avx is", avx)
+        #print("avy is", avy)
+        
         # measurement, update
         z1 = [avx, avy]
         
         x1, P = update2(x1, P, z1)
         
-        plt.scatter(hxvalues, hyvalues)
-        
+        #plt.scatter(hxvalues, hyvalues)
+        plt.scatter(avx, avy)
         hxvalues=[]
         hyvalues=[]
 plt.show()
+            
+            
+        
+
             
             
         
