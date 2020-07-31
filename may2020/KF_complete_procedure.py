@@ -3,11 +3,13 @@
 
 
 ### input parameters
-initialframe = 10
-n = 20 # ending frame 
+initialframe = 50
+endframe = 60
+
+n = endframe # ending frame 
 
 c1= 1
-c2 = 7
+c2 = 8
 
 maparrays = defaultdict(list)
 
@@ -16,6 +18,14 @@ for initialcluster in range(1, c2+1):
 
     velx= avx/10
     vely=avy/10
+    u = array(([[4.0], [12.0], [0], [0]]))
+    P = array([[10, 0, 0 , 0], [0, 10, 0, 0], [0, 0, 100, 0], [0, 0, 0, 100]])
+    F = array([[1, 0, dt , 0], [0, 1, 0, dt], [0, 0, 1, 0], [0, 0, 0, 1]])
+    H = array([[1,0,0,0], [0,1,0,0]])
+    # meas noise
+    R = array([[0.1,0], [0,0.1]])
+    B = np.eye(4)
+    Q = np.eye(4)
 
 
     # parameters of step 5
@@ -85,7 +95,7 @@ for initialcluster in range(1, c2+1):
     x1 = array(([[avx1], [avy1], [velx], [vely]])) 
 
 
-    for i in range(initialframe+1, n): # not need to process initial frame
+    for i in range(initialframe+1, endframe): # not need to process initial frame
         pathname = "file_out"+str(i)+".csv"
         firstrow=0
         for j in range(0, mx):
@@ -160,12 +170,13 @@ for initialcluster in range(1, c2+1):
             #plt.scatter(avx, avy)
             hxvalues=[]
             hyvalues=[]
+            
+    print("init clust", initialcluster)
     plt.show()
     maparrays[initialcluster] = outputclusters
             
             
-   
-
+        
 # analyze
 
 for initialcluster in range(c1, c2+1):
@@ -179,6 +190,8 @@ for initialcluster in range(c1, c2+1):
         nextres = findnextclusterapp(iframe, currentcluster)
         if str(nextres) == "nan":
             break
+        if nextres==0:
+            break 
         if iframe > endframe: 
             break
         result.append(nextres)
