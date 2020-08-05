@@ -1,0 +1,41 @@
+def newhighestfreq(fromi):
+    eps = 5
+    highest=0
+    indexhighest=fromi
+    (px,py) = dlookupdict[fromi]
+  # temp map to hold scores 
+    tempscores = {}
+    choosefromkeys= [] #  array to hold keys
+    a = altertrajcount[fromi]
+    for j in range(-10, 11):
+        jx= px+j
+        if jx>xmax-1 or jx<xmin:
+            continue
+        for k in range(-10, 11):
+            jy = py+k
+            if jy>ymax-1 or jy < ymin:
+                continue
+            toi = dinvlookupdict[(jx, jy)]
+            t = dtrajcount[(fromi, toi)]
+            tempscores[toi] = t
+      # if a is the max or if there is eps diff between different cells
+            if t > highest:
+                highest = t
+                indexhighest = toi
+    if a > highest:
+        # explore 
+        print("a > highest")
+        choosefromkeys.append(fromi)
+        v = tempscores.values()
+        hiscore = max(v)
+        hikey = max(tempscores, key=tempscores.get)
+        choosefromkeys.append(hikey)
+        for name, score in tempscores.items():
+            if score in range(hiscore-eps, a): # change upper limit to a's val
+                choosefromkeys.append(name)
+        choicelen = len(choosefromkeys)
+        randomchoice = np.random.choice(choicelen)
+        return choosefromkeys[randomchoice]
+    return indexhighest
+
+
