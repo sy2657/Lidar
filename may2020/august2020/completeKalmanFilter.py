@@ -1,16 +1,24 @@
 # complete try 2 
 
+missedmatching=0
+continuedmatching=0
+wrongmatching=0
+clustering_error = 0
+totalcomparisons = 0
+
 
 # KF step 7  (one cluster)
 
 ### input parameters
-initialframe = 470
-n = 480 # ending frame 
+initialframe = 520
+n = 530 # ending frame 
+
+endframe= n
  
 #initialcluster = 3
 
 ic = 1
-ec = 9
+ec = 6
 
 ###
 from collections import defaultdict
@@ -19,7 +27,7 @@ import matplotlib.pyplot as plt
 import csv
 
 
-for c in range(ic, ec):
+for c in range(ic, ec+1):
     initialcluster = c
 
     velx= avx/10
@@ -224,15 +232,20 @@ for c in range(ic, ec):
     t =True
     while t:
         nextres = findnextclusterapp(iframe, currentcluster)
+        #print("nextres", nextres)
         if nextres==0:
+            #print("nextres is zero")
             break
         if str(nextres) == "nan":
+            #print("nextres is nan")
             break
         if iframe >= endframe:
+            #print("frame over endframe")
             break
         result.append(nextres)
         iframe = iframe+1
         currentcluster = nextres
+    
     len1 = len(result) #datastore result
     len2 = len(listclusterids) # our result 
     
