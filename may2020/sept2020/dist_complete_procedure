@@ -147,6 +147,7 @@ for c in range(c1, c2+1):
                 #earray = endarraymap[i]
                 #earray.append(ky)
                 #endarraymap[i] = earray
+                print("append", ky,"at frame", i)
                 carray = cendarraymap[i]
                 carray.append(ky)
                 cendarraymap[i] = carray
@@ -167,8 +168,6 @@ for c in range(c1, c2+1):
                 plt.scatter(hxvalues, hyvalues)
                 if i % 2 == 0:
                     plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
-
-        
             
             
             # print mean
@@ -418,14 +417,16 @@ for c in range(c1, c2+1):
     print("firstframewrong is:", firstframewrong)
     
     # calculate
-    decades = np.floor(firstframewrong/10)
+    dec = np.floor(firstframewrong/10)
+    idec = int(dec) 
+    decades = list(range(1, idec+1))
     # if firstframewrong >= 10 then add to endarray
     #if firstframewrong>=10:
     tencount = 10
     for elem in decades:
-        print("add carray", carray, "to count", tencount)
         earray = endarraymap[tencount]
         carray = cendarraymap[tencount]
+        print("add carray", carray, "to count", tencount)
         earray.extend(carray)
         endarraymap[tencount] = earray
         tencount = tencount+10
