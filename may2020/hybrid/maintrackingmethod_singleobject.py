@@ -5,13 +5,13 @@ import math
 # test for single starting cluster and frame
 
 
-initialframe = 400
+initialframe = 390
 endframe= 500
 
 arrayx = []
 arrayy=[]
 
-initialcluster= 5
+initialcluster= 4
 
 listclusterids = []
 
@@ -192,10 +192,12 @@ for i in range(initialframe, endframe+1):
             # print previous coordinates
             print("last x vals", phxvalues)
             print("last y vals", phyvalues)
+            print( "last x", avx)
+            print("last y", avy)
             
             # break out
             #break
-            mindist = 5
+            mindist = thres
             foundmin = 0
             ## look for dist. of next cluster
             for c in currentmap3:
@@ -208,9 +210,13 @@ for i in range(initialframe, endframe+1):
                 if dist< thres:
                     foundmin=1
                     minclust = c
+                    mcx = cx
+                    mcy = cy
                     if dist< mindist:
                         mindist= dist
                         minclust = c
+                        mcx = cx
+                        mcy = cy
             # add
             if foundmin==1:
                 listclusterids.append(minclust)
@@ -219,7 +225,8 @@ for i in range(initialframe, endframe+1):
                 # update prevmap
                 prevmap = totalmap[minclust]
                 # set avx, avy
-                hxvals = 
+                avx  = mcx
+                avy = mcy
             else:
                 print("not found")
                 print("after last frame", i)
@@ -230,6 +237,8 @@ for i in range(initialframe, endframe+1):
             # set prevmap to the one 
             listclusterids.append(ky) # only append if there is next match
             prevmap = totalmap[ky]
+            avx = np.mean(hxvalues)
+            avy = np.mean(hyvalues)
         # obnum
         plt.scatter(hxvalues, hyvalues)
         
@@ -241,8 +250,6 @@ for i in range(initialframe, endframe+1):
         #parrayx.extend(hxvalues)
         #parrayy.extend(hyvalues)
 
-        avx = np.mean(hxvalues)
-        avy = np.mean(hyvalues)
         
         #pavex.append(avx)
         #pavey.append(avy)
