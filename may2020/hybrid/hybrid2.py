@@ -1,6 +1,6 @@
 # hybrid 2: angle within a range (say 45)
 
-
+import math
 # test for single starting cluster and frame
 parrayx = []
 parrayy = []
@@ -257,10 +257,13 @@ for i in range(initialframe, endframe+1):
                     avx = mcx
                     avy =mcy
                     # append to slopes / diffs
-                    xdiff.append(avx - avex[-1])
-                    ydiff.append(avy - avey[-1])
-                    avex.append(avx)
-                    avey.append(avy)
+                    #xdiff.append(avx - avex[-1])
+                    #ydiff.append(avy - avey[-1])
+                    #avex.append(avx)
+                    #avey.append(avy)
+            else:
+                print("not found , after last frame", i)
+                break
             
             
         if len(hxvalues) !=0:
@@ -269,10 +272,14 @@ for i in range(initialframe, endframe+1):
             listclusterids.append(ky) # only append if there is next match
             prevmap = totalmap[ky]
             
+            avx = np.mean(hxvalues)
+            avy = np.mean(hyvalues)
             # append to tempdict
-            td=tempdict[i]
-            td.append(ky)
-            tempdict[i] = td
+            
+            #td=tempdict[i]
+            #td.append(ky)
+            #tempdict[i] = td
+            
         # obnum
         plt.scatter(hxvalues, hyvalues)
         
@@ -288,8 +295,8 @@ for i in range(initialframe, endframe+1):
         parrayx.extend(hxvalues)
         parrayy.extend(hyvalues)
 
-        avx = np.mean(hxvalues)
-        avy = np.mean(hyvalues)
+        #avx = np.mean(hxvalues)
+        #avy = np.mean(hyvalues)
         
         prev_avex = avex[-1]
         prev_avey = avey[-1]
@@ -297,8 +304,8 @@ for i in range(initialframe, endframe+1):
         avex.append(avx)
         avey.append(avy)
         
-        diff_prev_x = xdiff[-1]
-        diff_prev_y = ydiff[-1]
+        #diff_prev_x = xdiff[-1]
+        #diff_prev_y = ydiff[-1]
         
         
         xdiff.append(avx - prev_avex)
@@ -307,9 +314,9 @@ for i in range(initialframe, endframe+1):
         # slope calc
         
         
-        
-        pavex.append(avx)
-        pavey.append(avy)
+        # pavex
+        avex.append(avx)
+        avey.append(avy)
         
         plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
 
