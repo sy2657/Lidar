@@ -63,6 +63,7 @@ slopes = []
 
 thres= 10
 
+finalarray.append(initialcluster)
 
 for i in range(initialframe, endframe+1):
     name = "file_out"
@@ -208,7 +209,8 @@ for i in range(initialframe, endframe+1):
             hyvalues = yvalues
             totalmap[ky]= currentmap
             
-        finalarray.append(ky)
+        #finalarray.append(ky)
+        
         # ky is the cluster id with the highest frequency
 
 
@@ -285,6 +287,7 @@ for i in range(initialframe, endframe+1):
                     avy =mcy
                     hxvalues = [mcx]
                     hyvalues=[mcy]
+                    finalarray.append(minclust)
                     # append to slopes / diffs
                     #xdiff.append(avx - avex[-1])
                     #ydiff.append(avy - avey[-1])
@@ -297,6 +300,7 @@ for i in range(initialframe, endframe+1):
             
         if len(hxvalues) !=0:
             #print("not 0")
+            finalarray.append(ky)
             # set prevmap to the one 
             listclusterids.append(ky) # only append if there is next match
             prevmap = totalmap[ky]
