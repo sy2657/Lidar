@@ -13,13 +13,13 @@ pavey = []
 phxvalues=[]
 phyvalues=[]
 
-initialframe = 370
-endframe= 380
+initialframe = 380
+endframe= 390
 
 arrayx = []
 arrayy=[]
 
-initialcluster= 2
+initialcluster= 1
 
 listclusterids = []
 
@@ -56,14 +56,17 @@ matchfreq= mf
 avex = []
 avey = []
 
-xdiff= []
-ydiff=[]
+#xdiff= []
+#ydiff=[]
 
-slopes = []
+#slopes = []
 
 thres= 10
 
 finalarray.append(initialcluster)
+
+# edited method
+angles = []
 
 for i in range(initialframe, endframe+1):
     name = "file_out"
@@ -75,6 +78,8 @@ for i in range(initialframe, endframe+1):
         matchfreq[j] =0
     
     currentmap3 = {} # average coordinates
+    
+    print("curr frame is:", i)
     
     with open(name) as csv_file:
         f =0 
@@ -142,7 +147,7 @@ for i in range(initialframe, endframe+1):
                 currentindices=[]
                 currentmap= {}
 
-                print("clusterid is", clusterid)
+                #print("clusterid is", clusterid)
                 # append first values
                 #xvalues.append(float(row[1]))
                 #yvalues.append(float(row[2]))
@@ -196,7 +201,7 @@ for i in range(initialframe, endframe+1):
                 numo = float(obnum)
                 matchfreq[numo]= matchfreq[numo]+1
         # check f values at end of file
-        numo2 = float(obnum)
+        numo2 = float(clusterid)
         
         # add to currentmap3 
         avecurrentx = np.mean(xvalues)
@@ -231,17 +236,17 @@ for i in range(initialframe, endframe+1):
             mindist= thres
             c_first =0 
             for c in currentmap3:
-                #print("c:", c)
+                print("c:", c)
                 cvalue = currentmap3[c]
                 cx = cvalue[0]
                 cy = cvalue[1]
-                #print("cx is", cx)
-                #print("cy is", cy)
-                #print("avx is", avx)
-                #print("avy is", avy)
+                print("cx is", cx)
+                print("cy is", cy)
+                print("avx is", avx)
+                print("avy is", avy)
                 dist1 = pow(cx - avx,2) + pow(cy - avy,2)
                 dist = math.sqrt(dist1)
-                #print("dist is", dist)
+                print("dist is", dist)
                 if dist<thres:
                     if c_first ==0:
                         c_first=1
@@ -251,6 +256,7 @@ for i in range(initialframe, endframe+1):
                     foundmin=1
                     #minclust=c
                     if dist< mindist:
+                        print("dist < mindist for cluster", c)
                         mindist=dist
                         minclust = c
                         mcx =cx
@@ -258,8 +264,11 @@ for i in range(initialframe, endframe+1):
                 
             if foundmin==1:
                 print("foundmin")
-                if len(xdiff) ==0:
-                    print("xdiff 0 and minclust:", minclust)
+                print("dist is", mindist)
+                print("minclust is", minclust)
+                
+                if len(angles) ==0:
+                    print("angles length 0 and minclust:", minclust)
                     prevmap = totalmap[minclust]
                     avx = mcx
                     avy = mcy 
@@ -270,17 +279,27 @@ for i in range(initialframe, endframe+1):
             
                 prev_avex = avex[-1]
                 prev_avey = avey[-1]
-                x_diff_current = cx - prev_avex
-                y_diff_current = cy - prev_avey
-                diff_prev_x = xdiff[-1]
-                diff_prev_y = ydiff[-1]
-                numerator = x_diff_current*diff_prev_x + y_diff_current*diff_prev_y
-                den = np.sqrt(pow(diff_prev_x,2)+pow(diff_prev_y,2))*np.sqrt(pow(x_diff_current,2)+pow(y_diff_current,2))
-                ang = np.arccos(numerator/den)
-                # conv to degrees
-                ang_deg = np.degrees(ang)
-                print("angle", ang_deg)
-                if ang_deg <= 45:
+                
+                xdiff_curr = mcx - prev_avex #how is avx set?
+                ydiff_curr = mcy - prev_avey 
+                # calc angle
+                rad = math.atan2(ydiff_curr, xdiff_curr)
+                
+                ang = math.degrees(rad)
+                
+                if ang<0:
+                    ang = 360+ang
+                
+                prev_ang = angles[-1]
+                
+                ang_diff = abs(ang - prev_ang)
+                
+                print("prev ang :", prev_ang)
+                print("curr ang:", ang)
+                
+                print("ang_diff is:", ang_diff)
+                
+                if ang_diff <= 45:
                     print("angle holds")
                     prevmap= totalmap[minclust]
                     avx = mcx
@@ -337,23 +356,23 @@ for i in range(initialframe, endframe+1):
         avex.append(avx)
         avey.append(avy)
         
-        #diff_prev_x = xdiff[-1]
-        #diff_prev_y = ydiff[-1]
+        # calc xdiff, ydiff
+        xdiff = avx - prev_avex
+        ydiff= avy - prev_avey
         
+        r1 = math.atan2(ydiff, xdiff)
+        deg1 = math.degrees(r1)
         
-        xdiff.append(avx - prev_avex)
-        ydiff.append(avy - prev_avey)
+        if deg1<0:
+            deg1 = 360+deg1
         
-        # slope calc
-        
-        
-        # pavex
-        avex.append(avx)
-        avey.append(avy)
+        angles.append(deg1)
         
         plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
 
 print("initial cluster", initialcluster)
 print("initial frame", initialframe)
+
+print("final array is", finalarray)
         
 plt.show()
