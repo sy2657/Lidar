@@ -3,7 +3,7 @@
 totalcomparisons = 0
 
 c1 = 1
-c2 = 3
+c2 = 4 # 6
 
 # new params
 totresults = []
@@ -17,52 +17,27 @@ continuedmatching = 0 # continues erroneously
 clustering_error = 0 
 
 #####
-initialframe = 310
-endframe = 320
+initialframe = 390
+endframe = 400
 
 
 for initialcluster in range(c1, c2+1):
-    parrayx = []
-    parrayy = []
-
-    pframex = []
-    pframey = []
-
+    
+    
+    arrayx = []
+    arrayy = []
     pavex = []
     pavey = []
-    phxvalues=[]
-    phyvalues=[]
 
-    #initialframe = 301
-    #endframe= 310
-
-    arrayx = []
-    arrayy=[]
-
-    #initialcluster= 1
-
-    listclusterids = []
-
-    listclusterids.append(initialcluster)
-
-    obnum = 0
+    phx = [] # previous high x values
+    phy =[] 
 
 
-    totalmap={}
+    obnum = 1
 
-    previndices=[]
-    currentindices=[]
-    totalmap = {}
+    totalmap ={}
 
-    finalarray=[]
-
-    xvalues = []
-    yvalues = []
-
-    hxvalues =[]
-    hyvalues= []
-
-    prevmap={}
+    prevmap = {}
 
     mf = defaultdict(list)
     # maximum object/cluster id in any frame
@@ -73,15 +48,24 @@ for initialcluster in range(c1, c2+1):
 
     matchfreq= mf
 
-    avex = []
-    avey = []
-
-    xdiff= []
-    ydiff=[]
-
-    slopes = []
 
     thres= 10
+
+    finalarray=[]
+
+    finalarray.append(initialcluster)
+
+    finalx =[]
+    finaly =[]
+
+    avex =[]
+    avey =[]
+
+    xvalues =[]
+    yvalues =[]
+
+    # edited method
+    angles = []
 
 
     for i in range(initialframe, endframe+1):
@@ -95,11 +79,16 @@ for initialcluster in range(c1, c2+1):
 
         currentmap3 = {} # average coordinates
 
+        print("curr frame is:", i)
+
+
         with open(name) as csv_file:
             f =0 
             # reset hxvalues , hyvalues
             hxvalues = []
             hyvalues=[]
+
+            obnum=1 
 
             currentmap= {}
 
@@ -122,23 +111,24 @@ for initialcluster in range(c1, c2+1):
                         h1, i1 = dhighestfreq(fromi)
                         #i1 = newhighestfreq(fromi)
                         prevmap[i1] = 1
+
                 plt.scatter(arrayx, arrayy)
 
-                avx1 = np.mean(arrayx)
-                avy1 = np.mean(arrayy)
-                plt.annotate(i, (avx1, avy1), textcoords="offset points", xytext=(0,10), ha='center')
-                # add to plot
-                pframex.append(arrayx)
-                pframey.append(arrayy)
+                avx = np.mean(arrayx)
+                avy = np.mean(arrayy)
+
+                finalx.append(avx)
+                finaly.append(avy)
+
+                plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
 
                 #append avx and avy
-                avex.append(avx1)
-                avey.append(avy1)
+                avex.append(avx)
+                avey.append(avy)
 
                 # reset ky 
                 ky = initialcluster
                 continue
-
             for row in csv_reader:
                 clusterid = float(row[0])
 
@@ -153,21 +143,15 @@ for initialcluster in range(c1, c2+1):
 
                         hxvalues = xvalues
                         hyvalues = yvalues
-                    obnum = clusterid
-
-                    currentindices=[]
-                    currentmap= {}
-
-                    xvalues =[]
-                    yvalues =[]
-                    # append first values
-                    #xvalues.append(float(row[1]))
-                    #yvalues.append(float(row[2]))
-
+                    obnum= clusterid
+                    currentmap={}
                     # take the average
                     avecurrentx = np.mean(xvalues)
                     avecurrenty = np.mean(yvalues)
                     currentmap3[numo1] = [avecurrentx, avecurrenty]
+
+                    xvalues =[]
+                    yvalues =[]
 
                     continue
 
@@ -180,182 +164,172 @@ for initialcluster in range(c1, c2+1):
                 fromi = dinvlookupdict[(xr,yr)]
                 # function to find highest freq 
                 h1, i1 = dhighestfreq(fromi)
-                # check outlier
-                freqo =0 
-                ## temp comment out list outliers
-                #if [xr, yr] in listoutliers:
-                    # determine highest outlier count + coordinates
-                #    listofoutliers = listoutliers2[fromi]
-                #    for outlierpt in listofoutliers:
-                #        indexo = dinvlookupdict[(outlierpt[0], outlierpt[1])]
-                #        ocount = doutlier[fromi, indexo]
-                #        if ocount > freqo:
-                #            freqo = ocount
-                #            highindo = indexo
-                # compare with dhighestfreq
-                if freqo > h1:
-                    i1 = highindo
-                # save to indices
-                currentindices.append(i1) 
                 # save to map
                 currentmap[i1] = 1
                 # check prev map
                 val = prevmap.get(fromi)
-                if val ==None:
-                    # do nothing
+                if val == None:
                     pass
-                    #if search2==0:
-                    #    print("hi")
                 else:
                     numo = float(obnum)
-                    matchfreq[numo]= matchfreq[numo]+1
-            # check f values at end of file
-            numo2 = float(obnum)
+                    matchfreq[numo] = matchfreq[numo]+1
+            numo2 = float(clusterid)
+            avecurrentx = np.mean(xvalues) ##USE AS CURRENT X
+            avecurrenty = np.mean(yvalues)
+            currentmap3[numo2] = [avecurrentx, avecurrenty]
+            totalmap[numo2] = currentmap
+            xvalues=[] ##RESET
+            yvalues=[]
             if matchfreq[numo2] > f:
                 ky = numo2
                 hxvalues = xvalues
                 hyvalues = yvalues
                 totalmap[ky]= currentmap
-            
-            # ky is the cluster id with the highest frequency
-
-
 
             if len(hxvalues) ==0:
-                print("0 h vals")
-                # print this frame
-                print("after last frame", i)
-                # print previous coordinates
-                print("last x vals", phxvalues)
-                print("last y vals", phyvalues)
-                # break out
-                #break
-                print("xdiff is", xdiff)
-                print("ydiff is", ydiff)
-                ## calculate slope
-                
-                #diff_prev_x = xdiff[-1]
-                #diff_prev_y = ydiff[-1]
-
-                # current diff
-
                 foundmin=0
-                mindist= thres
-                c_first =0 
+                mindist = thres
+                c_first=0
                 for c in currentmap3:
                     cvalue = currentmap3[c]
                     cx = cvalue[0]
                     cy = cvalue[1]
-                    dist1 = pow(cx - avx,2) + pow(cy - avy,2)
+                    ax = finalx[-1]
+                    ay = finaly[-1]
+                    dist1 = pow(cx - ax,2) + pow(cy - ay,2)
                     dist = math.sqrt(dist1)
-
-                    if dist<thres:
-                        if c_first ==0:
+                    if dist < thres:
+                        if c_first==0:
                             c_first=1
-                            minclust = c
+                            minclust=c
+                            mcx = cx
+                            mcy= cy
+                            mindist = dist
+                        foundmin=1
+                        if dist< mindist:
+                            mindist = dist
+                            minclust=c
                             mcx = cx
                             mcy = cy
-                        foundmin=1
-                        #minclust=c
-                        if dist< mindist:
-                            mindist=dist
-                            minclust = c
-                            mcx =cx
-                            mcy=cy
-
                 if foundmin==1:
-                    
-                    if len(xdiff) ==0:
-                        premap = totalmap[minclust]
+                    print("found min")
+                    print("dist is", mindist)
+                    print("minclust is", minclust)
+                    if len(angles)==0:
+                        print("angles length 0 and minclust:", minclust)
+                        prevmap = totalmap[minclust]
                         avx = mcx
                         avy = mcy 
                         finalarray.append(minclust)
+                        finalx.append(mcx)
+                        finaly.append(mcy)
+                        #plt.scatter(mcx, mcy)
+                        #plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
                         continue
-                    prev_avex = avex[-1]
-                    prev_avey = avey[-1]
-                    
-                    x_diff_current = cx - prev_avex
-                    y_diff_current = cy - prev_avey
-                    diff_prev_x = xdiff[-1]
-                    diff_prev_y = ydiff[-1]
-                    
-                    numerator = x_diff_current*diff_prev_x + y_diff_current*diff_prev_y
-                    den = np.sqrt(pow(diff_prev_x,2)+pow(diff_prev_y,2))*np.sqrt(pow(x_diff_current,2)+pow(y_diff_current,2))
-                    ang = np.arccos(numerator/den)
-                    # conv to degrees
-                    ang_deg = np.degrees(ang)
-                    if ang_deg <= 45:
+                    prev_avex = finalx[-1]
+                    prev_avey = finaly[-1]
+
+                    xdiff_curr = mcx - prev_avex #how is avx set?
+                    ydiff_curr = mcy - prev_avey 
+                    # calc angle
+                    rad = math.atan2(ydiff_curr, xdiff_curr)
+
+                    ang = math.degrees(rad)
+                    if ang<0:
+                        ang = 360+ang
+
+                    prev_ang = angles[-1]
+
+                    ang_diff = abs(ang - prev_ang)
+
+                    print("prev ang :", prev_ang)
+                    print("curr ang:", ang)
+
+                    print("ang_diff is:", ang_diff)
+                    if ang_diff <= 45:
+                        print("angle holds")
                         prevmap= totalmap[minclust]
                         avx = mcx
                         avy =mcy
                         finalarray.append(minclust)
+                        finalx.append(mcx)
+                        finaly.append(mcy)
                         # append to slopes / diffs
                         #xdiff.append(avx - avex[-1])
                         #ydiff.append(avy - avey[-1])
                         #avex.append(avx)
                         #avey.append(avy)
                 else:
-                    print("not found , after last frame", i)
+                    print("not found and end, after last frame", i)
                     break
-
-
             if len(hxvalues) !=0:
-                #print("not 0")
-                # set prevmap to the one 
-                listclusterids.append(ky) # only append if there is next match
+                finalarray.append(ky)
                 prevmap = totalmap[ky]
 
                 avx = np.mean(hxvalues)
                 avy = np.mean(hyvalues)
-                # append to tempdict
-                finalarray.append(ky)
 
-                #td=tempdict[i]
-                #td.append(ky)
-                #tempdict[i] = td
+                finalx.append(avx)
+                finaly.append(avy)
 
-            # obnum
-            plt.scatter(hxvalues, hyvalues)
-
-            # set previous x,y
-            phxvalues= hxvalues
-            phyvalues = hyvalues
-
-            # append to ordered by frame arrays
-            pframex.append(hxvalues)
-            pframey.append(hyvalues)
-
-            ### add to parrays
-            parrayx.extend(hxvalues)
-            parrayy.extend(hyvalues)
-
-            #avx = np.mean(hxvalues)
-            #avy = np.mean(hyvalues)
-
-            prev_avex = avex[-1]
-            prev_avey = avey[-1]
-
-            avex.append(avx)
-            avey.append(avy)
-
-            #diff_prev_x = xdiff[-1]
-            #diff_prev_y = ydiff[-1]
-
-
-            xdiff.append(avx - prev_avex)
-            ydiff.append(avy - prev_avey)
-
-            # slope calc
-
-
-            # pavex
-            avex.append(avx)
-            avey.append(avy)
-
-            plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
+            #print("final x", finalx)
+            #print("final y", finaly)
 
     print("initial cluster", initialcluster)
     print("initial frame", initialframe)
+
+    print("final array is", finalarray)
+    
+    listclusterids= finalarray
+    
+    print("listclusterids is", listclusterids)
+    
+    # plot
+    
+    
+    alen = len(finalarray)
+    print("length of array ", alen)
+    
+    xv1=[]
+    yv1=[]
+
+    ax =[]
+    ay =[]
+
+    acounter=0
+    for i in range(initialframe, initialframe+alen):
+        name = "file_out"
+        name = name+str(i)
+        name = name+".csv"
+
+
+        a = finalarray[acounter]
+        xarray = []
+        yarray = []
+        with open(name) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=",")
+            for row in csv_reader:
+                clusterid = float(row[0])
+                xpoint = float(row[1])
+                ypoint = float(row[2])
+
+                if clusterid == a:
+                    xarray.append(xpoint)
+                    yarray.append(ypoint)
+
+
+            # plot
+            plt.scatter(xarray,yarray)
+            avx = np.mean(xarray)
+            avy = np.mean(yarray)
+            plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
+
+            ax.append(avx)
+            ay.append(avy)
+
+        acounter =acounter +1
+        if acounter > alen:
+            break
 
     plt.show()
     
@@ -549,6 +523,9 @@ for initialcluster in range(c1, c2+1):
         
     contflag = 0
     missedflag= 0
+    
+    # print length of array found
+    print("len of listclusterids", len(listclusterids))
     
     if np.sum(booleanwrong) >0:
         if firstframewrong>len1:
