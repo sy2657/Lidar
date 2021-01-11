@@ -10,10 +10,10 @@ pavey = []
 phx = [] # previous high x values
 phy =[] 
 
-initialframe = 380
-endframe= 390
+initialframe = 420
+endframe= 450
 
-initialcluster=1
+initialcluster=3
 
 obnum = 1
 
@@ -101,6 +101,8 @@ for i in range(initialframe, endframe+1):
             
             finalx.append(avx)
             finaly.append(avy)
+            
+            # save angle
             
             plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
             
@@ -198,13 +200,25 @@ for i in range(initialframe, endframe+1):
                 print("dist is", mindist)
                 print("minclust is", minclust)
                 if len(angles)==0:
-                    print("angles length 0 and minclust:", minclust)
+                    print("angles array is of length 0 and minclust:", minclust)
                     prevmap = totalmap[minclust]
                     avx = mcx
                     avy = mcy 
                     finalarray.append(minclust)
+                    # add to angles
+                    xdiff = avx - finalx[-1]
+                    ydiff = avy - finaly[-1]
+                    rad = math.atan2(ydiff, xdiff)
+                    ang = math.degrees(rad)
+                    if ang<0:
+                        ang = 360+ang
+                    angles.append(ang)
+                    
                     finalx.append(mcx)
                     finaly.append(mcy)
+                    
+                    
+                    
                     #plt.scatter(mcx, mcy)
                     #plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
                     continue
@@ -228,7 +242,7 @@ for i in range(initialframe, endframe+1):
                 print("curr ang:", ang)
                 
                 print("ang_diff is:", ang_diff)
-                if ang_diff <= 45:
+                if ang_diff <= 30: # change from 45 to 30
                     print("angle holds")
                     prevmap= totalmap[minclust]
                     avx = mcx
@@ -241,6 +255,11 @@ for i in range(initialframe, endframe+1):
                     #ydiff.append(avy - avey[-1])
                     #avex.append(avx)
                     #avey.append(avy)
+                    #append to angles
+                    angles.append(ang)
+                else:
+                    print("angles too large, stop")
+                    break
             else:
                 print("not found and end, after last frame", i)
                 break
@@ -251,11 +270,23 @@ for i in range(initialframe, endframe+1):
             avx = np.mean(hxvalues)
             avy = np.mean(hyvalues)
             
+            prev_avx = finalx[-1]
+            prev_avy = finaly[-1]
+            
+            # update angles
+            xdiff = avx - prev_avx
+            ydiff = avy - prev_avy 
+            rad = math.atan2(ydiff, xdiff)
+            ang = math.degrees(rad)
+            if ang <0:
+                ang = 360+ang
+            angles.append(ang)
+            
             finalx.append(avx)
             finaly.append(avy)
         
-        print("final x", finalx)
-        print("final y", finaly)
+        #print("final x", finalx)
+        #print("final y", finaly)
         
         
         #print(currentmap3)
