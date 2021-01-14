@@ -1,6 +1,8 @@
 # hybrid 2 edit
 
 # check angles less than 30 in order to continue
+# most correct current version involving angles
+
 import math
 
 
