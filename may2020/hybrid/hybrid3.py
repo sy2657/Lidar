@@ -1,5 +1,7 @@
 # hybrid: distance, angle, and convex hull area method
 
+# angle, convex hull
+
 # hybrid 2 edit
 import math
 
@@ -12,10 +14,10 @@ pavey = []
 phx = [] # previous high x values
 phy =[] 
 
-initialframe = 420
-endframe= 450
+initialframe = 60
+endframe= 75
 
-initialcluster=3
+initialcluster=2
 
 obnum = 1
 
@@ -52,6 +54,7 @@ yvalues =[]
 angles = []
 
 areas = []
+ylens = []
 
 for i in range(initialframe, endframe+1):
     name = "file_out"
@@ -202,6 +205,9 @@ for i in range(initialframe, endframe+1):
                 print("found min")
                 print("dist is", mindist)
                 print("minclust is", minclust)
+                hxvalues = xvalues
+                hyvalues = yvalues
+                
                 if len(angles)==0:
                     print("angles array is of length 0 and minclust:", minclust)
                     prevmap = totalmap[minclust]
@@ -288,8 +294,18 @@ for i in range(initialframe, endframe+1):
             finalx.append(avx)
             finaly.append(avy)
         
+        # calculate vertical length of vehicle
+        yhigh = np.max(hyvalues)
+        ylow = np.min(hyvalues)
+        
+        ylength = abs(yhigh - ylow)
+        
+        ylens.append(ylength)
+        
         # convex hull area
         xlen = len(hxvalues)
+        avx = np.mean(hxvalues)
+        avy = np.mean(hyvalues)
         minx = avx
         minx_y = avy
         maxx = avx
@@ -304,8 +320,8 @@ for i in range(initialframe, endframe+1):
         map_diff_xy = {}
         
         for i in range(xlen):
-            xv = xvalues[i]
-            yv = yvalues[i]
+            xv = hxvalues[i]
+            yv = hyvalues[i]
             if xv > maxx:
                 maxx = xv
                 maxx_y = yv
@@ -350,10 +366,11 @@ for i in range(initialframe, endframe+1):
                 print("areas are too different")
                 break
                 
+        #print("frame num:", i)
+        print("ylength:", ylength)
         
         areas.append(area)
+        #print("areas:", areas)
         #print("final x", finalx)
         #print("final y", finaly)
         
-        
-        #print(currentmap3)
