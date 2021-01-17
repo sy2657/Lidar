@@ -2,8 +2,9 @@
 
 # version where finding max trajectories
 
+
 c1 = 1
-c2 = 4 # 6
+c2 = 3 # 6
 
 ca = list(range(c1, c2+1))
 
@@ -22,14 +23,16 @@ continuedmatching = 0 # continues erroneously
 clustering_error = 0 
 
 #####
-initialframe = 390
-endframe = 480
+initialframe = 60
+endframe = 160
 
 # unew = map10[initialframe]
-#carray = np.setdiff1d(ca, unew)
+
+unew = [1]
+carray = np.setdiff1d(ca, unew)
 
 
-for initialcluster in range(c1, c2+1):
+for initialcluster in carray:#range(c1, c2+1):
     
     
     arrayx = []
@@ -74,7 +77,7 @@ for initialcluster in range(c1, c2+1):
 
     # edited method
     angles = []
-
+    
 
     for i in range(initialframe, endframe+1):
         name = "file_out"
@@ -87,7 +90,7 @@ for initialcluster in range(c1, c2+1):
 
         currentmap3 = {} # average coordinates
 
-        #print("curr frame is:", i)
+        print("curr frame is:", i)
 
 
         with open(name) as csv_file:
@@ -127,6 +130,8 @@ for initialcluster in range(c1, c2+1):
 
                 finalx.append(avx)
                 finaly.append(avy)
+
+                # save angle
 
                 plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
 
@@ -220,18 +225,32 @@ for initialcluster in range(c1, c2+1):
                             mcx = cx
                             mcy = cy
                 if foundmin==1:
-                    #print("found min")
-                    #print("dist is", mindist)
-                    #print("minclust is", minclust)
+                    print("found min")
+                    print("dist is", mindist)
+                    print("minclust is", minclust)
+                    hxvalues = xvalues
+                    hyvalues = yvalues
+
                     if len(angles)==0:
-                        #print("angles length 0 and minclust:", minclust)
+                        print("angles array is of length 0 and minclust:", minclust)
                         prevmap = totalmap[minclust]
                         avx = mcx
                         avy = mcy 
                         finalarray.append(minclust)
+                        # add to angles
+                        xdiff = avx - finalx[-1]
+                        ydiff = avy - finaly[-1]
+                        rad = math.atan2(ydiff, xdiff)
+                        ang = math.degrees(rad)
+                        if ang<0:
+                            ang = 360+ang
+                        angles.append(ang)
+
                         finalx.append(mcx)
                         finaly.append(mcy)
-                        ky = minclust
+
+
+
                         #plt.scatter(mcx, mcy)
                         #plt.annotate(i, (avx, avy), textcoords="offset points", xytext=(0,10), ha='center')
                         continue
@@ -251,11 +270,11 @@ for initialcluster in range(c1, c2+1):
 
                     ang_diff = abs(ang - prev_ang)
 
-                    #print("prev ang :", prev_ang)
-                    #print("curr ang:", ang)
+                    print("prev ang :", prev_ang)
+                    print("curr ang:", ang)
 
-                    #print("ang_diff is:", ang_diff)
-                    if ang_diff <= 45:
+                    print("ang_diff is:", ang_diff)
+                    if ang_diff <= 30: # change from 45 to 30
                         print("angle holds")
                         prevmap= totalmap[minclust]
                         avx = mcx
@@ -263,12 +282,16 @@ for initialcluster in range(c1, c2+1):
                         finalarray.append(minclust)
                         finalx.append(mcx)
                         finaly.append(mcy)
-                        ky = minclust # set key
                         # append to slopes / diffs
                         #xdiff.append(avx - avex[-1])
                         #ydiff.append(avy - avey[-1])
                         #avex.append(avx)
                         #avey.append(avy)
+                        #append to angles
+                        angles.append(ang)
+                    else:
+                        print("angles too large, stop")
+                        break
                 else:
                     print("not found and end, after last frame", i)
                     break
@@ -278,6 +301,18 @@ for initialcluster in range(c1, c2+1):
 
                 avx = np.mean(hxvalues)
                 avy = np.mean(hyvalues)
+
+                prev_avx = finalx[-1]
+                prev_avy = finaly[-1]
+
+                # update angles
+                xdiff = avx - prev_avx
+                ydiff = avy - prev_avy 
+                rad = math.atan2(ydiff, xdiff)
+                ang = math.degrees(rad)
+                if ang <0:
+                    ang = 360+ang
+                angles.append(ang)
 
                 finalx.append(avx)
                 finaly.append(avy)
