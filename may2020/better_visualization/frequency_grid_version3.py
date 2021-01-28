@@ -32,8 +32,8 @@ class frequency_grid(object):
         self.backmap = {}
         
         ind_temp = 0
-        for ix in range(int(xmin), int(xmax)):
-            for iy in range(int(ymin), int(ymax)):
+        for ix in range(int(self.xmin), int(self.xmax)):
+            for iy in range(int(self.ymin), int(self.ymax)):
                 myvec = []
                 myvec.append(ix)
                 myvec.append(iy)
@@ -60,6 +60,7 @@ class frequency_grid(object):
         
         fileind = 1
         for filename in os.listdir('24hrdata'):
+            print("file", filename)
             fname = '24hrdata/'+filename
             fileind =fileind+1
             #irow=0
@@ -78,6 +79,7 @@ class frequency_grid(object):
                         prevy = float(prevrow[7])
                         pfx = round(prevx)
                         pfy = round(prevy)
+                        line_count = line_count+1
                         continue
                     currentx = float(row[6])
                     currenty = float(row[7])
@@ -94,18 +96,22 @@ class frequency_grid(object):
                     #save
                     fromi = self.backmap[(pfx, pfy)]
                     toi = self.backmap[(fx, fy)]
+                    #print("fromi is", fromi)
+                    #print("toi is", toi)
                     if abs(pfx - fx)>10 or abs(pfy - fy)>10:
                         continue
                     # check if it is none 
                     val = self.countmap.get((fromi, toi))
                     if val == None:
+                        #print("none val for fromi", fromi,"to toi ", toi)
                         self.countmap[(fromi, toi)] = 1
                     else:
+                        
                         mcount = self.countmap[(fromi, toi)]
                         self.countmap[(fromi, toi)] = mcount+1
                         # check by printing
-                        if mcount > 500:
-                            print("over 500 from i: ", fromi, " toi:", toi)
+                        if mcount >600:
+                            print("countmap from i: ", fromi, " toi:", toi)
                     pfx=fx
                     pfy=fy
     
