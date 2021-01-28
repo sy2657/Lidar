@@ -1,8 +1,11 @@
 # run algorithm 
 # do not initialize countmap, but check if val = countmap.get() is none
 
+# run algorithm on input
+
 # test initializing
 
+import csv
 import os
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -68,6 +71,7 @@ class frequency_grid(object):
                     trajectory_num = row[0]
                     if line_count==0:
                         line_count = line_count+1 # skip header
+                        continue
                     if line_count==1:
                         prevrow = row
                         prevx = float(prevrow[6])
