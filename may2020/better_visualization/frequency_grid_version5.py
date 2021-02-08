@@ -158,16 +158,26 @@ class frequency_grid(object):
         ptcloud = first_frame[init_cluster].point_cloud
         xvals = []
         yvals = []
+        currentmap={}
         for p in ptcloud:
             px =p[0]
             py =p[1]
             xvals.append(px)
             yvals.append(py)
+            # set prevmap 
+            xr = round(px)
+            yr = round(py)
+            fromi = self.backmap[(xr, yr)]
+            h1, i1 = self.highestfreq(fromi)
+            currentmap[i1] = 1
+            
+        self.prevmap = currentmap
         self.xposition.append(xvals)
         self.yposition.append(yvals)
         self.current_xposition = xvals
         self.current_yposition = yvals
-        self.trackinglist.append(init_cluster)
+        
+        self.trackinglist[0] = init_cluster
         
     def predict(self, frame_gen): # ind: current index
         # frame gen is 
@@ -185,6 +195,7 @@ class frequency_grid(object):
         f= 0
         currentmap = {} # temporary currentmap
         currentmap_freq = {} # holds freq scores
+        totalmap = {}
         
         xvalues=[]
         yvalues=[]
@@ -216,6 +227,7 @@ class frequency_grid(object):
                 currentmap[i1] = 1
                 currentmap_freq[i1] = h1 
                 val = self.prevmap.get(fromi)
+                print("prevmap value is", val)
                 if val ==None:
                     pass
                 else:
@@ -226,21 +238,18 @@ class frequency_grid(object):
                 hyvalues = yvalues
                 totalmap[ky]= currentmap
                 
-            if len(hxvalues)==0:
-                print("did not find next")
-                break
-            else:
-                print("found next")
-                # return ky
-                self.trackinglist[self.time_elapsed] = ky 
-                self.prevmap = currentmap
-                print("cluster found is :", ky)
-                self.xposition.append(hxvalues)
-                self.yposition.append(hyvalues)
+        if len(hxvalues)==0:
+            print("did not find next")
+            
+        else:
+            print("found next: key as :", ky)
+            # return ky
+            self.trackinglist[self.time_elapsed] = ky 
+            self.prevmap = currentmap
+            print("cluster found is :", ky)
+            self.xposition.append(hxvalues)
+            self.yposition.append(hyvalues)
                 #return ky
         self.time_elapsed = self.time_elapsed+1
         
-                
-        
-        
-        
+               
