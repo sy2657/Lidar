@@ -241,7 +241,7 @@ class frequency_grid(object):
                 
         if len(hxvalues)==0:
             print("did not find next")
-            
+            break
         else:
             print("found next: key as :", ky)
             # return ky
